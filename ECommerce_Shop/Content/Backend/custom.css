@@ -1,0 +1,63 @@
+﻿.displaynone {
+    display: none !important;
+}
+
+.footer-form-control {
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    display: block;
+    padding: 3px 6px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    font-weight: initial;
+}
+
+.align-middle {
+    vertical-align: middle !important;
+}
+
+.lowstock {
+    background-color: lightgoldenrodyellow !important;
+}
+
+.ourofStock {
+    background-color: lightcoral !important;
+}
+
+.ctabcontainer li.active > a {
+    background-color: #1ab394 !important;
+    color: #ffffff !important;
+    margin-right: 0px !important;
+    font-size: 12pt;
+}
+
+.ctabcontainer {
+    margin-bottom: 2%;
+}
+
+/*.ctabcontainer li > a {
+    background-color: #e5e5e5 !important;
+    color: #888888 !important;
+    margin-right: 0px !important;
+}*/
+
+/*.ctabcontainer .panel-body {
+    border-left: 3px solid #1ab394 !important;
+}*/
+
+table label.error, #ProductInfo label.error, #ProductDescription label.error {
+    display: none !important;
+}
+
+label.error + .chosen-container-single .chosen-single,
+label.error + .cke_editor_editor1, .tagsinput.error ~ div.bootstrap-tagsinput {
+    border: 1px solid #cc5965 !important;
+}
+
+select.valid + label + .chosen-container-single .chosen-single,
+textarea.valid + label + .cke_editor_editor1 {
+    border: 1px solid #d1d1d1 !important;
+}
