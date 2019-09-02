@@ -16,6 +16,12 @@ namespace ECommerce_Shop.Models
     {
         public long OfferId { get; set; }
         public string Title { get; set; }
-        public string ImageURL { get; set; }
+        public Nullable<long> DiscountId { get; set; }
+        public Nullable<long> DiscountPercentage { get; set; }
+        public Nullable<long> FlatDiscount { get; set; }
+        public Nullable<long> SpecificItems { get; set; }
+        public Nullable<long> SpecificValue { get; set; }
+    
+        public virtual DiscountType DiscountType { get; set; }
     }
 }

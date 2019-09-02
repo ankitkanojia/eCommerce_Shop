@@ -25,7 +25,6 @@ namespace ECommerce_Shop.Models
     
         public long ProductId { get; set; }
         public long CategoryId { get; set; }
-        public long FilterDataId { get; set; }
         public Nullable<long> OfferId { get; set; }
         public string ProductName { get; set; }
         public double MRP { get; set; }
@@ -35,9 +34,6 @@ namespace ECommerce_Shop.Models
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
         public string Tag { get; set; }
-        public double Discount { get; set; }
-        public Nullable<System.DateTime> DiscountStartOn { get; set; }
-        public Nullable<System.DateTime> DiscountEndOn { get; set; }
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

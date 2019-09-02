@@ -22,6 +22,7 @@ namespace ECommerce_Shop.Models
         public double MRP { get; set; }
         public double Price { get; set; }
         public double TAX { get; set; }
+        public string OfferTitle { get; set; }
         public double Discount { get; set; }
         public string SizeName { get; set; }
         public long ColorId { get; set; }

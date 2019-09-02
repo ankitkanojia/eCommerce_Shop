@@ -12,14 +12,13 @@ namespace ECommerce_Shop.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class FilterData
+    public partial class ProductPTE
     {
-        public long FilterDataId { get; set; }
-        public long CategoryId { get; set; }
-        public long FilterTitleId { get; set; }
-        public string FilterName { get; set; }
-    
-        public virtual Category Category { get; set; }
-        public virtual FilterTitle FilterTitle { get; set; }
+        public long id { get; set; }
+        public string word { get; set; }
+        public string meaning { get; set; }
+        public string extrainfomation { get; set; }
+        public Nullable<System.DateTime> createdDate { get; set; }
+        public bool isUpdated { get; set; }
     }
 }

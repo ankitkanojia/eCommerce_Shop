@@ -1,31 +1,401 @@
-﻿@{
+﻿@using ECommerce_Shop.Helpers
+@{
     ViewBag.Title = "Home Page";
+    var sliderImages = CommonFunctions.GetFileManager((int)EnumList.ImageType.SLIDER);
+    var partnerImages = CommonFunctions.GetFileManager((int)EnumList.ImageType.PARTNERS);
+    var advertisementsImages = CommonFunctions.GetAdvertisements();
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<style>
+    .advertimages {
+        display: none;
+    }
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        .advertimages > img {
+            width: 100px;
+            height: 100%;
+            position: absolute;
+            top: 744px;
+            right: 0;
+        }
+
+        .advertimages.active {
+            display: block;
+        }
+
+    .Hadvertimages.active {
+        display: block;
+    }
+
+    .Hadvertimages {
+        display: none;
+    }
+
+</style>
+
+@if (advertisementsImages.Any())
+{
+    var i = 1;
+    <div class="advertisement">
+        @foreach (var advertisement in advertisementsImages)
+        {
+            var cURL = !string.IsNullOrEmpty(advertisement.LinkUrl) ? advertisement.LinkUrl : "javascipt:void(0)";
+            <a class="hidden-xs hidden-md hidden-sm advertimages advertimages_@i @((i == 1)?"active":String.Empty)" href="@cURL">
+                <img src="@Url.Content(StaticValues.AdvertisementImagePath + advertisement.HImageUrl)" />
+            </a>
+            i++;
+        }
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+}
+
+<section class="container">
+    <!-- Slider -->
+    <div class="fr-slider-wrap">
+        <div class="fr-slider">
+            <ul class="slides">
+                @if (sliderImages.Any())
+                {
+                    foreach (var slider in sliderImages)
+                    {
+                        <li>
+                            <img src="@Url.Content(StaticValues.SliderImagePath + slider.ImageName)" alt="">
+                            <div class="fr-slider-cont">
+                                <h3>&nbsp;</h3>
+                                <p>&nbsp;</p>
+                                <p class="fr-slider-more-wrap">
+                                    &nbsp;
+                                </p>
+                            </div>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+
+    <!-- Banners -->
+    <div class="banners-wrap">
+        <div class="banners-list" style="margin-bottom: 0px;">
+            <div class="banner-i style_12">
+                <span class="banner-i-bg" style="background: url(@Url.Content("~/Uploads/Configuration/womencover/" + StaticValues.configureWomenCoverPath));"></span>
+                <div class="banner-i-cont">
+                    <p class="banner-i-subttl">STYLISH CLOTHES</p>
+                    <h3 class="banner-i-ttl">WOMEN'S COLLECTION</h3>
+                    <p>A great selection of dresses, <br>blouses and women's suits</p>
+                    <p class="banner-i-link"><a href="@Url.Action("Index","Catalog", new { id = 2})">View More</a></p>
+                </div>
+            </div>
+            <div class="banner-i style_11">
+                <span class="banner-i-bg" style="background: url(@Url.Content("~/Uploads/Configuration/mencover/" + StaticValues.configureMenCoverPath));"></span>
+                <div class="banner-i-cont">
+                    <p class="banner-i-subttl">NEW COLLECTION</p>
+                    <h3 class="banner-i-ttl">MEN'S<br>CLOTHING</h3>
+                    <p class="banner-i-link"><a href="@Url.Action("Index","Catalog", new { id = 3})">View More</a></p>
+                </div>
+            </div>
+            <div class="banner-i style_21">
+                <span class="banner-i-bg" style="background: url(@Url.Content("~/Uploads/Configuration/uniformcover/" + StaticValues.configureUniformCoverPath));"></span>
+                <div class="banner-i-cont">
+                    <h3 class="banner-i-ttl" style="color: white">UNIFORMS</h3>
+                    <p class="banner-i-link"><a href="@Url.Action("Index","Catalog", new { id = 5})">Go to catalog</a></p>
+                </div>
+            </div>
+            <div class="banner-i style_12">
+                <span class="banner-i-bg" style="background: url(@Url.Content("~/Uploads/Configuration/kidscover/" + StaticValues.configureKidsCoverPath));"></span>
+                <div class="banner-i-cont">
+                    <p class="banner-i-subttl">&nbsp;</p>
+                    <h3 class="banner-i-ttl">KIDS'S COLLECTION</h3>
+                    <p>Jumpers & Cardians<br>T-Shirts & Vests <br>Sandals & Flip-Flops</p>
+                    <p class="banner-i-link"><a href="@Url.Action("Index","Catalog", new { id = 4})">View More</a></p>
+                </div>
+            </div>
+            <div class="banner-i style_21">
+                <span class="banner-i-bg" style="background: url(@Url.Content("~/Uploads/Configuration/studiocover/" + StaticValues.configureStudioCoverPath))"></span>
+                <div class="banner-i-cont">
+                    <h3 class="banner-i-ttl text-white" style="color: white">STUDIO</h3>
+                    <p class="banner-i-link"><a href="@Url.Action("Index","Video")">View More</a></p>
+                </div>
+            </div>
+        </div>
+       
+        @if (advertisementsImages.Any())
+        {
+            var i = 1;
+            <div class="advertisement" style="margin-left: 4%; margin-right: 4%;">
+                @foreach (var advertisement in advertisementsImages)
+                {
+                    var cURL = !string.IsNullOrEmpty(advertisement.LinkUrl) ? advertisement.LinkUrl : "javascipt:void(0)";
+                    <a class="hidden-lg Hadvertimages Hadvertimages_@i @((i == 1)?"active":String.Empty)" href="@cURL" style="margin-bottom: 5%;">
+                        <img style="width: 100%;" src="@Url.Content(StaticValues.AdvertisementImagePath + advertisement.VImageUrl)" />
+                    </a>
+                    i++;
+                }
+            </div>
+        }
     </div>
-</div>
+
+    @{
+        var specialOfferProducts = CommonFunctions.GetProductsVms(null, null);
+        if (specialOfferProducts.Any())
+        {
+            specialOfferProducts = specialOfferProducts.Where(item => item.Discount > 0 && item.DiscountStartOn != null && item.DiscountEndOn != null && (item.DiscountStartOn.Value.Date <= DateTime.UtcNow.Date && item.DiscountEndOn.Value.Date >= DateTime.UtcNow.Date)).ToList();
+        }
+    }
+    @if (specialOfferProducts.Any())
+    {
+        <!-- Special offer -->
+        <div class="discounts-wrap">
+            <h3 class="component-ttl"><span>Special offer</span></h3>
+            <div class="flexslider discounts-list">
+                <ul class="slides">
+
+                    @foreach (var product in specialOfferProducts)
+                    {
+                        var productLength = product.ProductName.Length;
+                        var productName = product.ProductName;
+                        if (productLength > 15)
+                        {
+                            productName = productName.Substring(0, 15) + "..";
+                        }
+                        var discountedPrice = product.Price - (product.Price * product.Discount) / 100;
+                        <li class="discounts-i">
+                            <a href="@Url.Action("Detail", "Catalog", new {id = product.ProductId})" class="discounts-i-img">
+                                <img src="~/Uploads/Product/@product.CoverImage" alt="@productName">
+                            </a>
+                            <h3 class="discounts-i-ttl">
+                                <a href="@Url.Action("Detail", "Catalog", new {id = product.ProductId})">@productName</a>
+                            </h3>
+                            <p class="discounts-i-price">
+                                <b>Rs @discountedPrice</b>
+                                <del>Rs @product.Price</del>
+                            </p>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="discounts-info">
+                <p>Special offer!<br>Limited time only</p>
+                <a href="@Url.Action("Index", "Catalog")">Shop now</a>
+            </div>
+        </div>
+    }
+
+    @if (partnerImages.Any())
+    {
+        <div class="brands-wrap">
+            <h3 class="component-ttl component-ttl-ct"><span>Our partners</span></h3>
+            <div class="flexslider brands-list">
+                <ul class="slides">
+                    @foreach (var partner in partnerImages)
+                    {
+                        <li>
+                            <a target="_blank" rel="nofollow" href="http://google.com">
+                                <img src="@Url.Content(StaticValues.PartnerImagePath + partner.ImageName)" alt="">
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+
+
+    <!-- Quick View Product - start -->
+    <div class="qview-modal">
+        <div class="prod-wrap">
+            <a href="@Url.Action("Index","Product")">
+                <h1 class="main-ttl">
+                    <span>Reprehenderit adipisci</span>
+                </h1>
+            </a>
+            <div class="prod-slider-wrap">
+                <div class="prod-slider">
+                    <ul class="prod-slider-car">
+                        <li>
+                            <a data-fancybox-group="popup-product" class="fancy-img" href="http://placehold.it/500x525">
+                                <img src="http://placehold.it/500x525" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-fancybox-group="popup-product" class="fancy-img" href="http://placehold.it/500x591">
+                                <img src="http://placehold.it/500x591" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-fancybox-group="popup-product" class="fancy-img" href="http://placehold.it/500x525">
+                                <img src="http://placehold.it/500x525" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-fancybox-group="popup-product" class="fancy-img" href="http://placehold.it/500x722">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-fancybox-group="popup-product" class="fancy-img" href="http://placehold.it/500x722">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-fancybox-group="popup-product" class="fancy-img" href="http://placehold.it/500x722">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-fancybox-group="popup-product" class="fancy-img" href="http://placehold.it/500x722">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="prod-thumbs">
+                    <ul class="prod-thumbs-car">
+                        <li>
+                            <a data-slide-index="0" href="javascript:void(0)">
+                                <img src="http://placehold.it/500x525" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-slide-index="1" href="javascript:void(0)">
+                                <img src="http://placehold.it/500x591" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-slide-index="2" href="javascript:void(0)">
+                                <img src="http://placehold.it/500x525" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-slide-index="3" href="javascript:void(0)">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-slide-index="4" href="javascript:void(0)">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-slide-index="5" href="javascript:void(0)">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-slide-index="6" href="javascript:void(0)">
+                                <img src="http://placehold.it/500x722" alt="">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="prod-cont">
+                <p class="prod-actions">
+                    <a href="javascript:void(0)" class="prod-favorites"><i class="fa fa-heart"></i> Add to Wishlist</a>
+
+                </p>
+                <div class="prod-skuwrap">
+                    <p class="prod-skuttl">Color</p>
+                    <ul class="prod-skucolor">
+                        <li class="active">
+                            <img src="http://allstore-html.real-web.pro//img/front/color/blue.jpg" alt="">
+                        </li>
+                        <li>
+                            <img src="http://allstore-html.real-web.pro//img/front/color/red.jpg" alt="">
+                        </li>
+                        <li>
+                            <img src="http://allstore-html.real-web.pro//img/front/color/green.jpg" alt="">
+                        </li>
+                        <li>
+                            <img src="http://allstore-html.real-web.pro//img/front/color/yellow.jpg" alt="">
+                        </li>
+                        <li>
+                            <img src="http://allstore-html.real-web.pro//img/front/color/purple.jpg" alt="">
+                        </li>
+                    </ul>
+                    <p class="prod-skuttl">Sizes</p>
+                    <div class="offer-props-select">
+                        <p>XL</p>
+                        <ul>
+                            <li><a href="javascript:void(0)">XS</a></li>
+                            <li><a href="javascript:void(0)">S</a></li>
+                            <li><a href="javascript:void(0)">M</a></li>
+                            <li class="active"><a href="javascript:void(0)">XL</a></li>
+                            <li><a href="javascript:void(0)">L</a></li>
+                            <li><a href="javascript:void(0)">4XL</a></li>
+                            <li><a href="javascript:void(0)">XXL</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="prod-info">
+                    <p class="prod-price">
+                        <b class="item_current_price">$238</b>
+                    </p>
+                    <p class="prod-qnt">
+                        <input type="text" value="1">
+                        <a href="javascript:void(0)" class="prod-plus"><i class="fa fa-angle-up"></i></a>
+                        <a href="javascript:void(0)" class="prod-minus"><i class="fa fa-angle-down"></i></a>
+                    </p>
+                    <p class="prod-addwrap">
+                        <a href="javascript:void(0)" class="prod-add">Add to cart</a>
+                    </p>
+                </div>
+                <ul class="prod-i-props">
+                    <li>
+                        <b>SKU</b> 05464207
+                    </li>
+                    <li>
+                        <b>Manufacturer</b> Mayoral
+                    </li>
+                    <li>
+                        <b>Material</b> Cotton
+                    </li>
+                    <li>
+                        <b>Pattern Type</b> Print
+                    </li>
+                    <li>
+                        <b>Wash</b> Colored
+                    </li>
+                    <li>
+                        <b>Style</b> Cute
+                    </li>
+                    <li>
+                        <b>Color</b> Blue, Red
+                    </li>
+                    <li><a href="javascript:void(0)" class="prod-showprops">All Features</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Quick View Product - end -->
+</section>
+
+@section scripts
+{
+    <script>
+
+        var totalAdvert = @advertisementsImages.Count;
+        var counter = 1;
+
+        $(function() {
+            setInterval(updateAdvertisement, 10000);
+        });
+
+        var updateAdvertisement = function () {
+            counter = counter + 1;
+            $(".advertimages").removeClass("active");
+            $(".advertimages_" + counter).addClass("active");
+            if (counter === totalAdvert) {
+                counter = 0;
+            }
+
+
+            $(".Hadvertimages").removeClass("active");
+            $(".Hadvertimages_" + counter).addClass("active");
+            if (counter === totalAdvert) {
+                counter = 0;
+            }
+        }
+    </script>
+}

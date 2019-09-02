@@ -1,0 +1,171 @@
+﻿@using ECommerce_Shop.Helpers
+<!-- Header - start -->
+<header class="header">
+
+    <!-- Topbar - start -->
+    <div class="header_top">
+        <div class="container">
+            <ul class="contactinfo nav nav-pills">
+                <li>
+                    <i class='fa fa-phone'></i> @System.Web.HttpContext.Current.Application["mobileno"].ToString()
+                </li>
+                <li>
+                    <i class="fa fa-envelope"></i> @System.Web.HttpContext.Current.Application["email"].ToString()
+                </li>
+            </ul>
+
+
+            <!-- Social links -->
+            <ul class="social-icons nav navbar-nav">
+                <li>
+                    <a href="@System.Web.HttpContext.Current.Application["fblink"].ToString()" rel="nofollow" target="_blank">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="@System.Web.HttpContext.Current.Application["twlink"].ToString()" rel="nofollow" target="_blank">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="@System.Web.HttpContext.Current.Application["inslink"].ToString()" rel="nofollow" target="_blank">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="@System.Web.HttpContext.Current.Application["lilink"].ToString()" rel="nofollow" target="_blank">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- Topbar - end -->
+    <!-- Logo, Shop-menu - start -->
+    <div class="header-middle">
+        <div class="container header-middle-cont">
+            <div class="toplogo">
+                <a href="@Url.Action("Index","Home")">
+                    <img src="@Url.Content("~/Uploads/Configuration/logo/" + StaticValues.configureLogoPath)" alt="AllStore - MultiConcept eCommerce Template">
+                </a>
+            </div>
+            <div class="shop-menu">
+                <ul>
+
+                    @*<li>
+                            <a href="@Url.Action("Index","WishList")">
+                                <i class="fa fa-heart"></i>
+                                <span class="shop-menu-ttl">Wishlist</span>
+                                (<span id="topbar-favorites">1</span>)
+                            </a>
+                        </li>*@
+
+                    <li>
+                        <div class="h-cart">
+                            <a href="@Url.Action("Index","Cart")">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span class="shop-menu-ttl">Cart</span>
+                                (<b id="cartItemCount">@CommonFunctions.GetCurrentCartItems()</b>)
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Logo, Shop-menu - end -->
+    <!-- Topmenu - start -->
+    <div class="header-bottom">
+        <div class="container">
+            <nav class="topmenu">
+
+                <!-- Catalog menu - start -->
+                <div class="topcatalog">
+                    <a class="topcatalog-btn" href="@Url.Action("Index","Catalog", new {id = 0})"><span>All</span> catalog</a>
+                    <ul class="topcatalog-list">
+
+                        @{
+                            var categories = CommonFunctions.GetCategoriesMaster();
+                        }
+
+                        @if (categories.Any())
+                        {
+                            @TreeView.GetTreeView(categories, categories.FirstOrDefault().RootCategoryId.Value)
+                        }
+
+                        <li class="menu-item-has-children">
+
+                            <a href="/Offer/Index">
+                                OFFERS <i class="fa fa-angle-right"></i>
+                            </a>
+
+                            <ul class="sub-menu">
+                                @foreach (var offer in CommonFunctions.GetOfferList(0, true))
+                                {
+                                    <li class="">
+                                        <a href="/Offer/Index/@offer.Value">
+                                            @offer.Text
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Catalog menu - end -->
+                <!-- Main menu - start -->
+                <button type="button" class="mainmenu-btn">Menu</button>
+
+                <ul class="mainmenu">
+
+                    <li>
+                        <a href="@Url.Action("Index", "Home")" class="active">
+                            Home
+                        </a>
+                    </li>
+
+                    @if (categories.Any())
+                    {
+                        @TreeLinkView.GetTreeLinkView(categories, categories.FirstOrDefault().RootCategoryId.Value)
+                    }
+
+                    <li class="menu-item-has-children">
+                        <a href="/Offer/Index">
+                            OFFERS <i class="fa fa-angle-down"></i>
+                        </a>
+
+                        <ul class="sub-menu">
+                            @foreach (var offer in CommonFunctions.GetOfferList(0, true))
+                            {
+                                <li class="">
+                                    <a href="/Offer/Index/@offer.Value">
+                                        @offer.Text
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+
+                    <li class="mainmenu-more">
+                        <span>...</span>
+                        <ul class="mainmenu-sub"></ul>
+                    </li>
+                </ul>
+                <!-- Main menu - end -->
+                <!-- Search - start -->
+                <div class="topsearch">
+                    <a id="topsearch-btn" class="topsearch-btn" href="#"><i class="fa fa-search"></i></a>
+                    <form class="topsearch-form" action="#" autocomplete="off">
+                        <input id="searchProduct" name="searchProduct" type="text" placeholder="Search products">
+                    </form>
+                </div>
+                <!-- Search - end -->
+
+            </nav>
+        </div>
+    </div>
+    <!-- Topmenu - end -->
+
+</header>
+<!-- Header - end -->

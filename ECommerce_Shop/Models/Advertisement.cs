@@ -16,6 +16,7 @@ namespace ECommerce_Shop.Models
     {
         public long AdvertisementId { get; set; }
         public string LinkUrl { get; set; }
-        public string ImageUrl { get; set; }
+        public string HImageUrl { get; set; }
+        public string VImageUrl { get; set; }
     }
 }

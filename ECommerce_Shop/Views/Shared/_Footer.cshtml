@@ -1,0 +1,192 @@
+﻿@using ECommerce_Shop.Helpers
+<!-- Footer - start -->
+<footer class="footer-wrap">
+    <div class="footer-top">
+        <div class="container">
+            <div class="row">
+                <div class="companyinfo">
+                    <a href="@Url.Action("Index","Home")">
+                        <img src="@Url.Content("~/Uploads/Configuration/logo/" + StaticValues.configureLogoPath)" alt="AllStore - MultiConcept eCommerce Responsive HTML5 Template">
+                    </a>
+                    <br/>
+                    <div class="text-center">
+                        <label  onclick="$.fancybox.open('#f-block-modal-terms');" class="cLinks" style="color: #373d54;font-weight: bold;width: 100%;margin: 0 auto;" class="text-center">Terms & Conditions</label>
+                        <label onclick="$.fancybox.open('#f-block-modal-privacy');" class="cLinks" style="color: #373d54;font-weight: bold;width: 100%;margin: 0 auto;margin-top: 5px" class="text-center">Privacy Policy</label>
+                    </div>
+                </div>
+                <div class="f-block-list">
+                    <div class="f-block-wrap">
+                        <div class="f-block">
+                            <a href="#" class="f-block-btn" data-id="#f-block-modal-1">
+                                <div class="iframe-img">
+                                    <img src="~/Images/Frontend/footerimages/aboutpeople.jpg" alt="About us">
+                                </div>
+                                <div class="overlay-icon">
+                                    <i class="fa fa-info-circle"></i>
+                                </div>
+                            </a>
+                            <p class="f-info-ttl">About us</p>
+                            <p style="color: #636363">Shipping and payment information.</p>
+                        </div>
+                    </div>
+                    <div class="f-block-wrap">
+                        <div class="f-block" onclick="initFancyContactForm()">
+                            <a href="javascript:void(0)" class="f-block-btn">
+                                <div class="iframe-img">
+                                    <img src="~/Images/Frontend/footerimages/contactgirl.jpg" alt="Ask questions">
+                                </div>
+                                <div class="overlay-icon">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+                            </a>
+                            <p class="f-info-ttl">Connect us</p>
+                            <p style="color: #636363">We call back within 10 minutes</p>
+                        </div>
+                    </div>
+                    <div class="f-block-wrap">
+                        <div class="f-block">
+                            <a href="@Url.Action("Faq", "Home")">
+                                <div class="iframe-img">
+                                    <img src="~/Images/Frontend/footerimages/shop.jpg">
+                                </div>
+                                <div class="overlay-icon">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </a>
+                            <p class="f-info-ttl">Asked questions</p>
+                            <p style="color: #636363">Get resolution towards the services.</p>
+                        </div>
+                    </div>
+                    <div class="f-block-wrap">
+                        <div class="f-block">
+                            <a href="#" class="f-block-btn" data-id="#f-block-modal-4">
+                                <div class="iframe-img">
+                                    <img src="~/Images/Frontend/footerimages/address.jpg" alt="Our address">
+                                </div>
+                                <div class="overlay-icon">
+                                    <i class="fa fa-map-marker"></i>
+                                </div>
+                            </a>
+                            <p class="f-info-ttl">Our address</p>
+                            <p style="color: #636363">Trincomalee Road, Rotawewa, Sri Lanka</p>
+                        </div>
+                    </div>
+                    <div class="f-block-wrap">
+                        <div class="f-block">
+                            <a href="@Url.Action("CollectionPoints", "Home")">
+                                <div class="iframe-img">
+                                    <img src="~/Images/Frontend/footerimages/collectionpoint.jpg" alt="Our address">
+                                </div>
+                                <div class="overlay-icon">
+                                    <i class="fa fa-shopping-bag"></i>
+                                </div>
+                            </a>
+                            <p class="f-info-ttl">Collection Point</p>
+                            <p style="color: #636363">Collect delivery on desire place</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stylization f-block-modal f-block-modal-content" id="f-block-modal-1">
+                    <p class="text-center" style="margin: 0 0 0px;"><label style="color: #0086c3;font-size: 20px;font-weight: 700;margin: 0 0 23px;line-height: 1.2;font-family: 'PT Serif', serif;text-transform: uppercase">Love latest fashion, love @StaticValues.SiteFirstName@StaticValues.SiteLastName</label></p>
+                    <p class="text-justify" style="color: #373d54;margin: 0 0 10px;">@Html.Raw(System.Web.HttpContext.Current.Application["aboutus"].ToString())</p>
+                    <div class="text-center">
+                        <img style="margin-top: 15px;text-align: center" src="@Url.Content("~/Uploads/Configuration/logo/" + StaticValues.configureLogoPath)" alt="BossKinds Logo">
+                    </div>
+                </div>
+                
+                
+                <div class="stylization f-block-modal f-block-modal-content" id="f-block-modal-terms">
+                    <p class="text-center" style="margin: 0 0 0px;"><label style="color: #0086c3;font-size: 20px;font-weight: 700;margin: 0 0 23px;line-height: 1.2;font-family: 'PT Serif', serif;text-transform: uppercase">Terms and Conditions</label></p>
+                    <p class="text-justify" style="color: #373d54;margin: 0 0 10px;">@Html.Raw(System.Web.HttpContext.Current.Application["termsandconditions"].ToString())</p>
+                    <div class="text-center">
+                        <img style="margin-top: 15px;text-align: center" src="@Url.Content("~/Uploads/Configuration/logo/" + StaticValues.configureLogoPath)" alt="BossKinds Logo">
+                    </div>
+                </div>
+                
+                <div class="stylization f-block-modal f-block-modal-content" id="f-block-modal-privacy">
+                    <p class="text-center" style="margin: 0 0 0px;"><label style="color: #0086c3;font-size: 20px;font-weight: 700;margin: 0 0 23px;line-height: 1.2;font-family: 'PT Serif', serif;text-transform: uppercase">Privacy Policy</label></p>
+                    <p class="text-justify" style="color: #373d54;margin: 0 0 10px;">@Html.Raw(System.Web.HttpContext.Current.Application["privacypolicy"].ToString())</p>
+                    <div class="text-center">
+                        <img style="margin-top: 15px;text-align: center" src="@Url.Content("~/Uploads/Configuration/logo/" + StaticValues.configureLogoPath)" alt="BossKinds Logo">
+                    </div>
+                </div>
+
+
+                <div class="stylization f-block-modal f-block-modal-callback" id="f-block-modal-customsimple">
+                    <div class="modalform">
+                        <style>
+                            label.error {
+                                display: none !important;
+                            }
+
+                            input.error {
+                                border: 1px solid red !important;
+                            }
+                        </style>
+                        <form action="#" method="POST" class="form-validate"  id="frmnormalconta">
+                            <p class="modalform-ttl">Connect Us</p>
+                            <input id="connectname" type="text" placeholder="Your name" data-required="text" name="name">
+                            <input id="connectemail" type="text" placeholder="Your email" data-required="text" name="email">
+                            <input id="connectphone" onkeypress="return isNumberKey(event)" type="text" placeholder="Your phone" data-required="text" name="phone">
+                            <h4 style="margin-bottom: 15px;" class="text-center">OR</h4>
+                            <h6 style="margin-bottom: 15px; text-align: center" class="text-center"> Mobile On : @System.Web.HttpContext.Current.Application["mobileno"].ToString()</h6>
+                            <h6 style="margin-bottom: 15px; text-align: center" class="text-center"> WhatsApp On : @System.Web.HttpContext.Current.Application["whatsappno"].ToString()</h6>
+                            <p id="contactMailsendErrorMsg" class="text-center" style="display: none"><small style="color: red; font-size: 15px;">Please wait mail is sending.</small></p>
+                            <button id="frm-submitcontact" class="ladda-button" data-style="expand-left"  style="width: 100%" type="button"><i class="fa fa-paper-plane"></i> Send</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="stylization f-block-modal f-block-modal-video" id="f-block-modal-3">
+
+                </div>
+
+                <div class="stylization f-block-modal f-block-modal-map" id="f-block-modal-4">
+                    <div class="allstore-gmap">
+                        <div class="marker" data-zoom="6" data-lat="8.569000" data-lng="81.233000">Trincomalee Road, Rotawewa, Sri Lanka</div>
+                    </div>
+                </div>
+                <div class="f-delivery">
+                    <img src="~/Images/Frontend/map.png" alt="">
+                    <h4>We can deliver anywhere</h4>
+                    <p style="color: #818181;font-weight: bold;">Sri Lanka</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <ul class="social-icons nav navbar-nav">
+                    <li>
+                        <a style="color: #373d54" href="@System.Web.HttpContext.Current.Application["fblink"].ToString()" rel="nofollow" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a style="color: #373d54" href="@System.Web.HttpContext.Current.Application["twlink"].ToString()" rel="nofollow" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a style="color: #373d54" href="@System.Web.HttpContext.Current.Application["inslink"].ToString()" rel="nofollow" target="_blank">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a style="color: #373d54" href="@System.Web.HttpContext.Current.Application["lilink"].ToString()" rel="nofollow" target="_blank">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div style="font-weight: bold" class="footer-copyright">
+                    <i><a href="@StaticValues.DevelopementCompanyURL">@StaticValues.DevelopementCompany</a></i> © Copyright @DateTime.Now.Year
+                </div>
+            </div>
+        </div>
+    </div>
+
+</footer>
+<!-- Footer - end -->

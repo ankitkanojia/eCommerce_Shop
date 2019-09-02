@@ -1,42 +1,313 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using ECommerce_Shop.Helpers
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+
+    <meta name="og:type" content="website" />
+    <meta name="og:image" content="@ViewBag.Image"/>
+    <meta name="og:title" content="@ViewBag.Title" />
+    <meta name="og:description" content="@ViewBag.Desc" />
+    <meta name="og:url" content="@ViewBag.Url"/>
+
+    <meta name="format-detection" content="telephone=no">
+    <title>@StaticValues.SiteFirstName @StaticValues.SiteLastName</title>
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700ii%7CRoboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic" rel="stylesheet">
+    <link rel="stylesheet" href="~/Content/Frontend/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/Frontend/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/Frontend/ion.rangeSlider.css">
+    <link rel="stylesheet" href="~/Content/Frontend/ion.rangeSlider.skinFlat.css">
+    <link rel="stylesheet" href="~/Content/Frontend/jquery.bxslider.css">
+    <link rel="stylesheet" href="~/Content/Frontend/jquery.fancybox.css">
+    <link rel="stylesheet" href="~/Content/Frontend/flexslider.css">
+    <link rel="stylesheet" href="~/Content/Frontend/swiper.css">
+    <link rel="stylesheet" href="~/Content/Frontend/swiper.css">
+    <link rel="stylesheet" href="~/Content/Frontend/style.css">
+    <link rel="stylesheet" href="~/Content/Frontend/media.css">
+    <link href="~/Content/Frontend/custom.css" rel="stylesheet" />
+    <link href="~/Content/Backend/plugins/toastr/toastr.min.css" rel="stylesheet" />
+    <link href="~/Scripts/Frontend/ladda/ladda-themeless.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+    <img style="display: none" src="@ViewBag.Image" alt="logo" />
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+@Html.Partial("_Header")
+
+<!-- Main Content - start -->
+<main>
+    @RenderBody()
+</main>
+<!-- Main Content - end -->
+
+@Html.Partial("_Footer")
+
+<!-- jQuery plugins/scripts - start -->
+<script src="~/Scripts/Frontend/jquery-1.11.2.min.js"></script>
+<script src="~/Scripts/Frontend/jquery.bxslider.min.js"></script>
+<script src="~/Scripts/Frontend/fancybox/fancybox.js"></script>
+<script src="~/Scripts/Frontend/fancybox/helpers/jquery.fancybox-thumbs.js"></script>
+<script src="~/Scripts/Frontend/jquery.flexslider-min.js"></script>
+<script src="~/Scripts/Frontend/swiper.jquery.min.js"></script>
+<script src="~/Scripts/Frontend/jquery.waypoints.min.js"></script>
+<script src="~/Scripts/Frontend/progressbar.min.js"></script>
+<script src="~/Scripts/Frontend/ion.rangeSlider.min.js"></script>
+<script src="~/Scripts/Frontend/chosen.jquery.min.js"></script>
+<script src="~/Scripts/Frontend/jQuery.Brazzers-Carousel.js"></script>
+<script src="~/Scripts/Frontend/plugins.js"></script>
+<script src="~/Scripts/Frontend/main.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhAYvx0GmLyN5hlf6Uv_e9pPvUT3YpozE"></script>
+<script src="~/Scripts/Frontend/gmap.js"></script>
+<script src="~/Scripts/Backend/plugins/toastr/toastr.min.js"></script>
+<script src="~/Scripts/Backend/plugins/validate/jquery.validate.min.js"></script>
+<script src="~/Scripts/Frontend/ladda/spin.min.js"></script>
+<script src="~/Scripts/Frontend/ladda/ladda.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $("#frmnormalconta").validate({
+            rules: {
+                name: {
+                    required: true
+                },
+                email: {
+                    email: true
+                },
+                phone: {
+                    required: true
+                }
+            }
+        });
+
+    });
+</script>
+<!-- jQuery plugins/scripts - end -->
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "3000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    var initFancyContactForm = function() {
+        $("#contactMailsendErrorMsg").hide();
+        $('#connectname,#connectemail,#connectphone').val('');
+        $.fancybox([
+            {
+                href: '#f-block-modal-customsimple',
+                wrapCSS: 'f-block-modal-wrap',
+                padding: 0,
+                helpers: {
+                    overlay: { closeClick: true }
+                }
+            }
+        ]);
+    };
+
+    $('#frm-submitcontact').click(function(e) {
+        if ($("#frmnormalconta").valid()) {
+            $("#contactMailsendErrorMsg").show();
+            e.preventDefault();
+            var l = Ladda.create(this);
+            l.start();
+            $.fancybox([{ href: '#f-block-modal-customsimple', helpers: { overlay: { closeClick: false } } }]);
+            $.ajax({
+                url: "@Url.Action("Inquiry", "Cart")",
+                type: "POST",
+                data: {
+                    name: $('#connectname').val(),
+                    email: $('#connectemail').val(),
+                    phone: $('#connectphone').val()
+                },
+                dataType: "json",
+                success: function(data) {
+                    $("#contactMailsendErrorMsg").hide();
+                    $.fancybox.close();
+                    l.stop();
+                    if (data.status) {
+                        toastr.options.timeOut = 10000;
+                        toastr["info"]("Thank you for inquiry, Admin will contact soon..");
+                    } else {
+                        toastr["error"]("Something went wrong..");
+                    }
+                },
+                error: function() {
+                    toastr["error"]("Something went wrong..");
+                }
+            });
+        }
+    });
+</script>
+
+<script>
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input",
+            function(e) {
+                var a, b, i, val = this.value;
+                /*close any already open lists of autocompleted values*/
+                closeAllLists();
+                if (!val) {
+                    return false;
+                }
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                this.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                var found = false;
+                for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (arr[i].value.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        found = true;
+                        /*create a DIV element for each matching element:*/
+                        b = document.createElement("DIV");
+                        /*make the matching letters bold:*/
+                        b.innerHTML = "<strong>" + arr[i].value.substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].value.substr(val.length);
+                        /*insert a input field that will hold the current array item's value:*/
+                        b.innerHTML += "<input type='hidden' value='" + arr[i].key + "'>";
+                        /*execute a function when someone clicks on the item value (DIV element):*/
+                        b.addEventListener("click",
+                            function(e) {
+                                /*insert the value for the autocomplete text field:*/
+                                //inp.value = this.getElementsByTagName("input")[0].value;
+                                location.href = '/Catalog/Detail/' + this.getElementsByTagName("input")[0].value;
+                                /*close the list of autocompleted values,
+                                (or any other open lists of autocompleted values:*/
+                                closeAllLists();
+                            });
+                        a.appendChild(b);
+                    }
+                }
+
+                if (!found) {
+                    $("#searchProductautocomplete-list")
+                        .append(
+                            '<div><strong>N</strong>o Product Found..</div>');
+                }
+            });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown",
+            function(e) {
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    /*If the arrow DOWN key is pressed,
+                    increase the currentFocus variable:*/
+                    currentFocus++;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 38) { //up
+                    /*If the arrow UP key is pressed,
+                    decrease the currentFocus variable:*/
+                    currentFocus--;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        /*and simulate a click on the "active" item:*/
+                        if (x) x[currentFocus].click();
+                    }
+                }
+            });
+
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click",
+            function(e) {
+                closeAllLists(e.target);
+            });
+    }
+
+    /*initiate the autocomplete function on the "searchProduct" element, and pass along the countries array as possible autocomplete values:*/
+</script>
+
+<script>
+    var products = [];
+    $(document).ready(function() {
+        $.ajax({
+            url: "@Url.Action("GetProducts", "Home")",
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+                products = [];
+                $.each(data.productDetails,
+                    function() {
+                        products.push({
+                            key: this.ProductId,
+                            value: this.ProductName
+                        });
+                    });
+
+                autocomplete(document.getElementById("searchProduct"), products);
+            },
+            error: function() {
+                alert('Something went wrong..');
+            }
+        });
+    });
+</script>
+
+@RenderSection("scripts", required: false)
 </body>
 </html>

@@ -17,7 +17,6 @@ namespace ECommerce_Shop.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Category()
         {
-            this.FilterDatas = new HashSet<FilterData>();
             this.Products = new HashSet<Product>();
             this.Sizes = new HashSet<Size>();
         }
@@ -36,8 +35,6 @@ namespace ECommerce_Shop.Models
         public Nullable<int> CreatedDateInt { get; set; }
         public Nullable<int> UpdatedDateInt { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FilterData> FilterDatas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

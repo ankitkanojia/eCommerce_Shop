@@ -12,18 +12,18 @@ namespace ECommerce_Shop.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class FilterTitle
+    public partial class DiscountType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public FilterTitle()
+        public DiscountType()
         {
-            this.FilterDatas = new HashSet<FilterData>();
+            this.Offers = new HashSet<Offer>();
         }
     
-        public long FilterTitleId { get; set; }
-        public string Name { get; set; }
+        public long DiscountId { get; set; }
+        public string Type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FilterData> FilterDatas { get; set; }
+        public virtual ICollection<Offer> Offers { get; set; }
     }
 }
