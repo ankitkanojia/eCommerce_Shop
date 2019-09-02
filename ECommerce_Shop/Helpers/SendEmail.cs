@@ -12,9 +12,9 @@ namespace ECommerce_Shop.Helpers
             bool response;
             try
             { 
-                var client = new SendGridClient("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");
-                var from = new EmailAddress("noreply@bosskinds.com", "BossKinds");
-                var toAddress = new EmailAddress(to, "BossKinds");
+                var client = new SendGridClient("YOUR KEY");
+                var from = new EmailAddress("noreply@gmail.com", "ECommerceShop");
+                var toAddress = new EmailAddress(to, "ECommerceShop");
                 var plainTextContent = string.Empty;
                 var htmlContent = body;
                 var msg = MailHelper.CreateSingleEmail(from, toAddress, subject, plainTextContent, htmlContent);
