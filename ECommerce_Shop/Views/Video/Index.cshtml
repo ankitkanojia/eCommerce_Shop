@@ -1,0 +1,64 @@
+﻿@using ECommerce_Shop.Helpers
+@model ContainerPageVm
+@{
+    ViewBag.Title = "Index";
+}
+
+<section class="container stylization maincont">
+    <div class="row">
+        <div class="col-md-9">
+            <h1 class="main-ttl"><span>@Model.CategoryName</span></h1>
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownListFor(m => m.CategoryId, CommonFunctions.GetVideoCategory(), new { @class = "form-control" })
+        </div>
+    </div>
+    @if (Model.videoDetails.Any())
+    {
+        var i = 1;
+        foreach (var video in Model.videoDetails)
+        {
+            if (i % 4 == 0 || i == 1)
+            {
+                @:<div class="row">
+                }
+
+                      <div class="col-md-3">
+                          @if (!video.IsVideo)
+                          {
+                              <img  width="100%" style="max-height:180px" src="@Url.Content(StaticValues.ContainerImagePath + video.ImageName)" />
+                          }
+                          else
+                          {
+                              <iframe width="100%" height="180" src="@Url.Content(StaticValues.ContainerVideoPath + video.VideoName)" frameborder="0" allowfullscreen></iframe>
+                          }
+                      </div>
+
+                if (i % 4 == 0)
+                {
+                @:</div><br />
+            }
+
+            i = i + 1;
+        }
+    }
+    else
+    {
+        <h5 class="text-danger">Video(s) Not Available <br /><small>No video found in such a category.</small></h5>
+    }
+
+</section>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#CategoryId").change(function () {
+                if ($(this).val().length == 0) {
+                    $(location).attr('href', window.location.origin + "/Video/Index");
+                } else {
+                    $(location).attr('href', window.location.origin + "/Video/Index/" + $(this).val());
+                }
+            });
+        })
+    </script>
+}
