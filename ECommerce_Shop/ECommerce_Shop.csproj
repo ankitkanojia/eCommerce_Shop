@@ -1205,6 +1205,7 @@
     <Content Include="Views\Catalog\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Areas\ControlPanel\Controllers\" />
     <Folder Include="Areas\ControlPanel\Models\" />
     <Folder Include="Areas\ControlPanel\Views\Shared\" />
@@ -1225,8 +1226,12 @@
     <Content Include="Content\Backend\plugins\summernote\font\summernote.eot" />
     <Content Include="Content\Backend\plugins\summernote\font\summernote.ttf" />
     <Content Include="Content\Backend\plugins\summernote\font\summernote.woff" />
-    <Content Include="App_Data\TreeLinkView.cshtml" />
-    <Content Include="App_Data\TreeView.cshtml" />
+    <Content Include="App_Code\TreeLinkView.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Code\TreeView.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="Scripts\Backend\api\typehead_collection.json" />
     <Content Include="Scripts\Backend\plugins\chartist\chartist.min.js.map" />
