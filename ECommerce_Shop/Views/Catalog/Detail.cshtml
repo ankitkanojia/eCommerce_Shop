@@ -1,0 +1,305 @@
+﻿@model Tuple<ProductVm, CatelogVm, List<ProductVm>>
+
+@{
+    /**/
+
+    ViewBag.Title = "Detail";
+    ViewBag.Image = "http://bosskinds.com/Uploads/Product/" + Model.Item1.ProductImagesDetails.OrderByDescending(m => m.iscover).FirstOrDefault().ImageName;
+    ViewBag.Desc = Html.Raw(Model.Item1.FullDescription);
+    ViewBag.Url = "http://bosskinds.com/Catalog/Detail/" + Model.Item1.ProductId;
+}
+
+<style>
+    .dot {
+        height: 15px;
+        width: 15px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 2px;
+    }
+</style>
+
+<section class="container">
+
+    <input type="hidden" id="hdSizeId" />
+    <input type="hidden" id="hdColorId" />
+
+
+    <h1 class="main-ttl"><span>@Model.Item1.ProductName</span></h1>
+    <!-- Single Product - start -->
+    <div class="prod-wrap">
+
+        <!-- Product Images -->
+        <div class="prod-slider-wrap">
+            <div class="prod-slider">
+                <ul class="prod-slider-car">
+                    @if (Model.Item1.ProductImagesDetails.Any())
+                    {
+                        foreach (var item in Model.Item1.ProductImagesDetails.OrderByDescending(m => m.iscover))
+                        {
+                            <li>
+                                <a data-fancybox-group="product" class="fancy-img" href="javascript:void(0)">
+                                    <img src="~/Uploads/Product/@item.ImageName" alt="">
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="prod-thumbs">
+                <ul class="prod-thumbs-car">
+                    @if (Model.Item1.ProductImagesDetails.Any())
+                    {
+                        var slideIndex = 0;
+                        foreach (var item in Model.Item1.ProductImagesDetails.OrderByDescending(m => m.iscover))
+                        {
+                            <li>
+                                <a data-slide-index="@slideIndex" href="javascript:void(0)">
+                                    <img src="~/Uploads/Product/@item.ImageName" alt="">
+                                </a>
+                            </li>
+
+                            slideIndex = slideIndex + 1;
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Product Description/Info -->
+        <div class="prod-cont">
+            <div class="prod-cont-txt">
+                @Html.Raw(Model.Item1.ShortDescription)
+            </div>
+            @*<p class="prod-actions">
+                    <a href="@Url.Action("Index","WishList")" class="prod-favorites"><i class="fa fa-heart"></i> Wishlist</a>
+                </p>*@
+
+            <div class="prod-skuwrap">
+                @if (!string.IsNullOrEmpty(Model.Item1.OfferTitle))
+                {
+                    <p style="background-color: green; color: white"><small style="padding-left: 8px"><i class="fa fa-gift"></i> @Model.Item1.OfferTitle</small></p>
+                }
+                <br/>
+                @if (Model.Item2.Colors.Any())
+                {
+                    var classNm = string.Empty;
+                    var isFirstOrDefault = true;
+                    <p class="prod-skuttl">Color</p>
+                    <ul class="prod-skucolor">
+                        @foreach (var item in Model.Item2.Colors)
+                        {
+                            if (item.Hex == "#FFFFFF" || item.Hex == "#FFFF00")
+                            {
+                                classNm = "blackcolored";
+                            }
+
+                            <li id="liColor_@(item.ColorId)" class="@classNm liColor @(isFirstOrDefault ? "active" : "")">
+                                <a href="javascript:void(0)" onclick="changeColor(@item.ColorId)">
+                                    <span style="background-color: @item.Hex; border: 1px solid #9e9e9e" class="dot"></span>
+                                </a>
+
+                                @if (isFirstOrDefault)
+                                {
+                                    <input type="hidden" id="hdColorIdTemp" value="@item.ColorId"/>
+                                }
+                            </li>
+
+                            isFirstOrDefault = false;
+                        }
+
+                    </ul>
+                }
+                <p class="prod-skuttl">PRODUCT SIZES</p>
+                <div class="offer-props-select">
+                    @if (Model.Item2.Sizes.Any())
+                    {
+                        <p>@Model.Item2.Sizes.FirstOrDefault().Name</p>
+                    }
+                    else
+                    {
+                        <p>One Size</p>
+                    }
+                    <ul>
+                        @if (Model.Item2.Sizes.Any())
+                        {
+                            <input type="hidden" id="hdSizeIdTemp" value="@Model.Item2.Sizes.AsEnumerable().LastOrDefault().SizeId"/>
+                            foreach (var item in Model.Item2.Sizes)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="changeSize(@item.SizeId)">@item.Name</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript:void(0)">One Size</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="prod-info">
+                <p class="prod-price">
+                    <b>Rs @Model.Item1.Price</b>
+                </p>
+                <p class="prod-qnt">
+                    <input value="1" min="1" id="quantity" type="number" class="form-control">
+
+                </p>
+                <p class="prod-addwrap">
+                    <a id="addToCartButton" href="javascript:void(0)" data-style="expand-left" data-optionID="@Model.Item1.ProductId" class="prod-add ladda-button" rel="nofollow">Add to cart</a>
+                </p>
+            </div>
+            <ul class="prod-i-props">
+                @if (Model.Item1.ProductFeatureDetails.Any())
+                {
+                    foreach (var item in Model.Item1.ProductFeatureDetails)
+                    {
+                        <li>
+                            <b>@item.FeatureType</b> @item.FeatureValue
+                        </li>
+                    }
+                }
+
+
+            </ul>
+        </div>
+
+        <!-- Product Tabs -->
+        <div class="prod-tabs-wrap">
+            <ul class="prod-tabs">
+                <li><a data-prodtab-num="1" class="active" href="javascript:void(0)" data-prodtab="#prod-tab-1">Description</a></li>
+                <li><a data-prodtab-num="2" id="prod-props" href="javascript:void(0)" data-prodtab="#prod-tab-2">Features</a></li>
+            </ul>
+            <div class="prod-tab-cont">
+
+                <p data-prodtab-num="1" class="prod-tab-mob active" data-prodtab="#prod-tab-1">Description</p>
+                <div class="prod-tab stylization" id="prod-tab-1">
+                    <p>
+                        @Html.Raw(Model.Item1.FullDescription)
+                    </p>
+                </div>
+                <p data-prodtab-num="2" class="prod-tab-mob" data-prodtab="#prod-tab-2">Features</p>
+                <div class="prod-tab prod-props" id="prod-tab-2">
+                    <table>
+                        <tbody>
+                            @if (Model.Item1.ProductFeatureDetails.Any())
+                            {
+                                foreach (var item in Model.Item1.ProductFeatureDetails)
+                                {
+
+                                    <tr>
+                                        <td>@item.FeatureType</td>
+                                        <td>@item.FeatureValue</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- Single Product - end -->
+    <!-- Related Products - start -->
+    <div class="prod-related">
+        <h2><span>Other products</span></h2>
+        <div class="prod-related-car" id="prod-related-car">
+            <ul class="slides">
+                <li class="prod-rel-wrap">
+                    @if (Model.Item3.Any())
+                    {
+                        foreach (var item in Model.Item3)
+                        {
+                            <div class="prod-rel">
+                                <a href="@Url.Action("Detail", "Catalog", new{id = item.ProductId})" class="prod-rel-img">
+                                    <img src="~/Uploads/Product/@item.CoverImage" alt="Adipisci aperiam commodi">
+                                </a>
+                                <div class="prod-rel-cont">
+                                    <h3><a href="@Url.Action("Detail", "Catalog", new{id = item.ProductId})">@item.ProductName</a></h3>
+                                        <p class="prod-rel-price">
+                                            <b>Rs @item.Price</b>
+                                        </p>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <!-- Related Products - end -->
+
+</section>
+
+<div class="a2a_kit a2a_kit_size_32 a2a_floating_style a2a_vertical_style"  data-a2a-url="@ViewBag.Url" style="left:0px; top:150px;">
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_linkedin"></a>
+</div>
+
+@section scripts{
+    <script async src="https://static.addtoany.com/menu/page.js"></script>
+    <script type="text/javascript">
+
+        function changeSize(id) {
+            $('#hdSizeId').val(id);
+        }
+
+        function changeColor(id) {
+            $('.liColor').each(function () {
+                $(this).removeClass('active');
+            });
+            $('#hdColorId').val(id);
+            $('#liColor_' + id).addClass('active');
+        }
+
+
+        $(document).ready(function () {
+            //Assign Default Value
+            $('#hdColorId').val($('#hdColorIdTemp').val());
+            $('#hdSizeId').val($('#hdSizeIdTemp').val());
+        });
+
+        $('#addToCartButton').click(function(e) {
+            e.preventDefault();
+            var l = Ladda.create(this);
+            l.start();
+            var id = $(this).attr("data-optionID");
+//            var size = $('#hdSizeId').val();
+//            if (size.length === 0) {
+//                size = 0;
+//            }
+//            var color = $('#hdColorId').val()
+//            if (color.length === 0) {
+//                color = 0;
+//            }
+
+            $.ajax({
+                url: "@Url.Action("AddToCart", "Catalog")",
+                type: "POST",
+                data: { productId: id, sizeId: $('#hdSizeId').val(), quantity: $('#quantity').val(), colorId: $('#hdColorId').val() },
+                dataType: "json",
+                success: function (data) {
+                    l.stop();
+                    if (data.status) {
+                        $('#cartItemCount').html(data.cartItems);
+                        toastr["info"]("Product successfully added in your cart");
+                    } else {
+                        toastr["error"]("Error! Something went wrong.");
+                    }
+                },
+                error: function() {
+
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,227 @@
+﻿@model List<CartVm>
+@{
+    ViewBag.Title = "Index";
+    double finalPrice = 0;
+}
+
+<style>
+    label.error {
+        display: none !important;
+    }
+
+    input.error {
+        border: 1px solid red !important;
+    }
+</style>
+<section class="container stylization maincont">
+
+
+    <ul class="b-crumbs">
+        <li>
+            <a href="@Url.Action("Index","Home")">
+                Home
+            </a>
+        </li>
+        <li>
+            <span>Cart</span>
+        </li>
+    </ul>
+    <h1 class="main-ttl"><span>Cart</span></h1>
+    <!-- Cart Items - start -->
+
+    @if (Model.Any())
+    {
+        <div class="cart-items-wrap">
+            <table class="cart-items">
+                <thead>
+                    <tr>
+                        <td class="cart-image">Photo</td>
+                        <td class="cart-ttl">Products</td>
+                        <td class="cart-quantity">Quantity</td>
+                        <td class="cart-price">Price</td>
+                        <td class="cart-price">Tax</td>
+                        <td class="cart-summ">Payable Amount</td>
+                        <td class="cart-del">&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="cart-image">
+                                <a href="@Url.Action("Index","Product")">
+                                    <img src="~/Uploads/Product/@item.ProductImage">
+                                </a>
+                            </td>
+                            <td class="cart-ttl">
+                                <a href="@Url.Action("Detail","Catalog", new{id = item.ProductId})">
+                                    @item.ProductName
+                                </a>
+                                <p>Color:  @item.ColorName</p>
+                                <p>Size:  @item.ColorHex</p>
+                                @if (!string.IsNullOrEmpty(item.OfferTitle))
+                                {
+                                    <p style="background-color: green; color: white"><small style="padding-left: 8px"><i class="fa fa-gift"></i> @item.OfferTitle</small></p>
+                                }
+                            </td>
+                            <td class="cart-quantity">
+                                <p class="cart-qnt">
+                                    <input value="@item.Quantity" readonly="" type="text">
+                                </p>
+                            </td>
+                            <td class="cart-price">
+
+                                @if (item.Discount > 0)
+                                {
+                                    <p class="prod-i-price">
+                                        @{
+                                            var discountedPrice = item.Price - (item.Price * item.Discount) / 100;
+                                        }
+
+                                        <b>Rs @item.Price</b>
+                                        <label style="color: yellowgreen;font-weight: 400;display: block; font-size: 12px;">Discount: Rs @item.Discount</label>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="prod-i-price">
+                                        <b>Rs @item.Price</b>
+                                    </p>
+                                }
+                            </td>
+                            <td class="cart-image">
+                                @item.TAX%
+                            </td>
+                            <td class="cart-summ">
+                                @{
+                                    double price = item.Price;
+                                    price = price * item.Quantity;
+
+                                    if (item.Discount > 0)
+                                    {
+                                        price = price - item.Discount;
+                                    }
+                                    
+                                    //Calculate TAX
+                                    double tax = (price * item.TAX) / 100;
+                                    price += tax;
+                                    finalPrice += price;
+                                }
+
+                                <b>Rs @price</b>
+                            </td>
+                            <td class="cart-del">
+                                <a href="@Url.Action("RemoveCartItem", "Cart", new{id = item.CartDetailId})" class="cart-remove"></a>
+                            </td>
+                        </tr>
+                    }
+
+
+
+
+
+                </tbody>
+            </table>
+        </div>
+        <ul class="cart-total">
+            <li class="cart-summ">TOTAL: <b>Rs @finalPrice</b></li>
+        </ul>
+        <div class="stylization f-block-modal f-block-modal-callback" id="f-block-modal-custom">
+            <div class="modalform">
+                <form id="checkoutform" action="#" method="POST" class="form-validate">
+                    <p class="modalform-ttl">Connect Us</p>
+                    <input type="text" placeholder="Your name" data-required="text" id="cname" name="name">
+                    <input type="text" placeholder="Your email" data-required="text" id="cemail" name="email">
+                    <input type="text" onkeypress="return isNumberKey(event)" placeholder="Your phone" data-required="text" id="cphone" name="phone">
+                    <h4 style="margin-bottom: 15px;" class="text-center">OR</h4>
+                    <h6 style="margin-bottom: 15px;text-align: center" class="text-center"> Mobile On : @System.Web.HttpContext.Current.Application["mobileno"].ToString()</h6>
+                    <h6 style="margin-bottom: 15px;text-align: center" class="text-center"> WhatsApp On : @System.Web.HttpContext.Current.Application["whatsappno"].ToString()</h6>
+                    <p id="mailsendErrorMsg" class="text-center" style="display: none"><small style="color: red; font-size: 15px;">Please wait mail is sending.</small></p>
+                    <button id="frm-submit" class="ladda-button" data-style="expand-left" style="width: 100%" type="button"><i class="fa fa-paper-plane"></i> Send</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="cart-submit">
+            <a id="checkoutbtn" href="#" class="cart-submit-btn f-block-btn" data-id="#f-block-modal-custom">Checkout</a>
+        </div>
+
+    }
+    else
+    {
+        <h2>Empty Cart! <a href="@Url.Action("Index", "Home")">Click here to add product in cart</a></h2>
+    }
+
+    <!-- Cart Items - end -->
+
+
+</section>
+
+
+@section scripts{
+     <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#checkoutform").validate({
+                rules: {
+                    name: {
+                        required: true
+                    },
+                    email: {
+                        email: true
+                    },
+                    phone: {
+                        required: true
+                    }
+                }
+            });
+
+        });
+    </script>
+    <script type="text/javascript">
+
+        $(function() {
+            $('#checkoutbtn').click(function () {
+                $("#mailsendErrorMsg").hide();
+                $('#cname,#cemail,#cphone').val('');
+                $.fancybox([
+                    {
+                        href: '#f-block-modal-custom',
+                        wrapCSS: 'f-block-modal-wrap',
+                        padding: 0,
+                        helpers: {
+                            overlay: { closeClick: true }
+                        }
+                    }
+                ]);
+            });
+
+
+            $('#frm-submit').click(function(e) {
+                if ($("#checkoutform").valid()) {
+                    $("#mailsendErrorMsg").show();
+                    e.preventDefault();
+                    var l = Ladda.create(this);
+                    l.start();
+                    $.fancybox([{ href: '#f-block-modal-custom', helpers: { overlay: { closeClick: false } } }]);
+                    $.ajax({
+                        url: "@Url.Action("Checkout", "Cart")",
+                        type: "POST",
+                        data: { name: $('#cname').val(), email: $('#cemail').val(), phone: $('#cphone').val() },
+                        dataType: "json",
+                        success: function(data) {
+                            l.stop();
+                            $("#mailsendErrorMsg").hide();
+                            toastr.options.timeOut = 10000;
+                            toastr["info"]("Thank you for inquiry, Admin will contact soon..", { timeOut: 5000 });
+                            window.location.href = '/';
+                        },
+                        error: function() {
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

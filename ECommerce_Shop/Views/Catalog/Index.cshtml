@@ -1,0 +1,371 @@
+﻿@using Microsoft.Ajax.Utilities
+@model Tuple<List<ProductVm>, List<Category>, CatelogVm>
+
+@{
+    ViewBag.Title = "Gallery";
+    var totalPages = 0;
+    if (Model.Item1.Any())
+    {
+        var calc = (Convert.ToDecimal(Model.Item1.Count) / 12);
+        totalPages = Convert.ToInt32(Math.Ceiling(calc));
+    }
+}
+<style>
+    .dot {
+        height: 15px;
+        width: 15px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 2px;
+    }
+
+    .prod-items .prod-i h3 {
+        margin: 25px 0 5px;
+    }
+
+    .offerbtn {
+        position: absolute;
+        width: 100%;
+        color: white;
+        background-color: black;
+        border: 0px;
+        border-radius: unset;
+        height: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+</style>
+
+@using (Html.BeginForm("Index", "Catalog", new { area = "" }, FormMethod.Post, new { id = "frm", @class = "login" }))
+{
+    var sizeIds = Model.Item3.Sizes.Where(s => s.IsChecked).Select(s => s.SizeId).ToArray();
+
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="productId" name="productId" value="@Model.Item3.ProductId" />
+
+    if (sizeIds.Any())
+    {
+        <input type="hidden" id="sizeIds" name="sizeIds" value="@(string.Join(",",sizeIds))" />
+    }
+    else
+    {
+        <input type="hidden" id="sizeIds" name="sizeIds" value="" />
+    }
+
+
+
+    <input type="hidden" id="fromPrice" name="fromPrice" value="0" />
+    <input type="hidden" id="toPrice" name="toPrice" value="0" />
+
+    <section class="container">
+
+        <div class="row">
+            <div class="col-md-10">
+                <h1 class="main-ttl"><span>@Model.Item3.CategoryName</span></h1>
+            </div>
+            @*<div class="col-md-2">
+                    <select class="form-control">
+                        <option>Default sorting</option>
+                        <option>Price - high to low</option>
+                        <option>What`s new</option>
+                        <option>Price - low to high</option>
+                        <option>Discount</option>
+                    </select>
+                </div>*@
+        </div>
+        <br />
+
+
+
+        <!-- Catalog Sidebar - start -->
+        <div class="section-sb">
+
+            @*@if (Model.Item2.Any())*@
+            <!-- Catalog Categories - start -->
+            @*<div class="section-sb-current">
+                    <h3><a href="@Url.Action("Index", "Catalog", new {id = Model.Item3.CategoryId})">@Model.Item3.CategoryName <span id="section-sb-toggle" class="section-sb-toggle"><span class="section-sb-ico"></span></span></a></h3>
+                    <ul class="section-sb-list" id="section-sb-list">
+                        @foreach (var item in (Model.Item2))
+                        {
+                            if (item.Name == "STUDIO")
+                            {
+                                <li class="categ-1">
+                                    <a href="@Url.Action("Index", "Video")">
+                                        <span class="categ-1-label">@item.Name</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="categ-1">
+                                    <a href="@Url.Action("Index", "Catalog", new {id = item.CategoryId})">
+                                        <span class="categ-1-label">@item.Name</span>
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>*@
+            <!-- Catalog Categories - end -->
+            <!-- Filter - start -->
+            <div class="section-filter">
+                <button id="section-filter-toggle" class="section-filter-toggle" data-close="Hide Filter" data-open="Show Filter">
+                    <span>Show Filter</span> <i class="fa fa-angle-down"></i>
+                </button>
+                <div class="section-filter-cont">
+                    @if (Model.Item1.Any())
+                    {
+                        <div class="section-filter-price">
+                            <div class="range-slider section-filter-price" data-min="0" data-max="@Model.Item1.Max(s => s.Price)" data-from="0" data-to="@Model.Item1.Max(s => s.Price)" data-prefix="Rs" data-grid="false"></div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="section-filter-price">
+                            <div class="range-slider section-filter-price" data-min="0" data-max="3000" data-from="0" data-to="3000" data-prefix="Rs" data-grid="false"></div>
+                        </div>
+                    }
+
+                    @if (Model.Item3.Sizes.Any())
+                    {
+                        <div class="section-filter-item opened">
+                            <p class="section-filter-ttl">Sizes <i class="fa fa-angle-down"></i></p>
+                            <div class="section-filter-fields">
+                                @foreach (var item in Model.Item3.Sizes)
+                                {
+                                    <p class="section-filter-field">
+                                        <input @(item.IsChecked ? "checked" : "") class="chkSize" id="chkSize-@item.SizeId" value="on" type="checkbox">
+                                        <label class="section-filter-checkbox" for="chkSize-@item.SizeId">@item.Name</label>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="section-filter-buttons">
+                        <input onclick="submitForm()" class="btn btn-themes" id="set_filter" name="set_filter" value="Apply filter" type="button">
+                        <input class="btn btn-link" id="del_filter" name="del_filter" value="Reset" type="button">
+                    </div>
+                </div>
+            </div>
+            <!-- Filter - end -->
+
+        </div>
+        <!-- Catalog Sidebar - end -->
+        <!-- Catalog Items | Gallery V2 - start -->
+        <div class="section-cont">
+            <div class="prod-items section-items prod-items-galimg">
+                @if (Model.Item1.Any())
+                {
+                    int i = 0;
+                    int page = 1;
+                    foreach (var item in Model.Item1)
+                    {
+                        if ((i % 12) == 0)
+                        {
+                            var pageID = "page" + page;
+                            @:<div class="page" id="@pageID">
+                            }
+
+                            i = i + 1;
+
+                            <div class="prod-i">
+                                <div class="prod-i-top">
+                                    <a href="@Url.Action("Detail", "Catalog", new {id = item.ProductId})" class="prod-i-img">
+                                        <!-- NO SPACE -->
+                                        @if (item.ProductImagesDetails.Any())
+                                        {
+                                            foreach (var images in item.ProductImagesDetails)
+                                            {
+                                                <img src="~/Uploads/Product/@images.ImageName" />
+                                            }
+                                        }
+                                        <!-- NO SPACE -->
+                                    </a>
+
+                                    <div class="prod-i-properties">
+                                        <dl>
+                                            @if (item.ProductFeatureDetails.Any())
+                                            {
+                                                foreach (var features in item.ProductFeatureDetails)
+                                                {
+                                                    <dt>@features.FeatureType</dt>
+                                                    <dd>@features.FeatureValue<br></dd>
+                                                }
+                                            }
+                                        </dl>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(item.OfferTitle))
+                                    {
+                                        <span class="offerbtn">@item.OfferTitle</span>
+                                    }
+                                </div>
+                                <h3>
+                                    <a href="product.html">@item.ProductName</a>
+                                </h3>
+                                <div class="prod-i-action">
+                                    <p class="prod-i-info">
+                                        @*<a href="#" class="prod-i-favorites"><span>Wishlist</span><i class="fa fa-heart"></i></a>*@
+                                        <a href="@Url.Action("Detail", "Catalog", new {id = item.ProductId})" class="prod-i-buy"><span>Detail View</span><i class="fa fa-search"></i></a>
+                                        <a href="#" class="prod-i-properties-label"><span>Features</span><i class="fa fa-info"></i></a>
+                                    </p>
+
+                                        <p class="prod-i-price">
+                                            <b>Rs @item.Price</b>
+                                        </p>
+                                </div>
+                            </div>
+
+                            if ((i % 12) == 0)
+                            {
+                            @:</div>
+                            page = page + 1;
+                        }
+                    }
+                }
+                else
+                {
+                    <h2 class="text-danger">Product Not Available</h2>
+                    <h2 class="text-info">We are continue working to add product in this category. <br /> Stay tuned till we finished with same.</h2>
+                }
+            </div>
+
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <ul id="pagination-demo" class="pagination-lg"></ul>
+                </div>
+            </div>
+        </div>
+        <!-- Catalog Items | Gallery V2 - start -->
+
+    </section>
+}
+
+<style>
+    /*.container {
+        margin-top: 20px;
+    }*/
+
+    .pagination-lg > li > a, .pagination-lg > li > span {
+        font-size: 12px;
+    }
+
+    .page {
+        display: none;
+    }
+
+    .page-active {
+        display: block;
+    }
+</style>
+
+
+@section scripts
+{
+    <script src="~/Scripts/Frontend/jquery.twbsPagination.js"></script>
+    <script>
+        $('#pagination-demo').twbsPagination({
+            totalPages: @totalPages,
+            startPage: 1,
+            visiblePages: 5,
+            initiateStartPageClick: true,
+            href: false,
+            hrefVariable: '{{number}}',
+            first: 'First',
+            prev: 'Previous',
+            next: 'Next',
+            last: 'Last',
+            loop: false,
+            pageVariable: '{{page}}',
+            totalPagesVariable: '{12}',
+            onPageClick: function (event, page) {
+                $('.page-active').removeClass('page-active');
+                $('#page'+page).addClass('page-active');
+            },
+            paginationClass: 'pagination',
+            nextClass: 'next',
+            prevClass: 'prev',
+            lastClass: 'last',
+            firstClass: 'first',
+            pageClass: 'page',
+            activeClass: 'active',
+            disabledClass: 'disabled'
+        });
+    </script>
+
+    <script>
+
+        function submitForm() {
+            $('#frm').submit();
+        }
+
+        $(document).ready(function () {
+
+            // Range Slider
+            $('.range-slider').ionRangeSlider({
+                type: "double",
+                grid: $(this).data('grid'),
+                min: $(this).data('min'),
+                max: $(this).data('max'),
+                from: $(this).data('from'),
+                to: $(this).data('to'),
+                prefix: $(this).data('prefix'),
+                onFinish: function (data) {
+                    $('#fromPrice').val(data.from);
+                    $('#toPrice').val(data.to);
+                },
+                onStart: function (data) {
+                    $('#fromPrice').val(data.from);
+                    $('#toPrice').val(data.to);
+                }
+            });
+
+
+
+            $('.chkSize').on('change',
+                function () {
+                    var str = "";
+                    $('.chkSize').each(function () {
+                        if ($(this).prop("checked") === true) {
+                            var id = $(this).prop("id").split('-');
+                            str += "," + id[1];
+                        }
+                    });
+                    $('#colorIds').val(str);
+                });
+
+
+
+
+            $('.chkFilter').on('change',
+                function () {
+                    var str = "";
+                    $('.chkFilter').each(function () {
+                        if ($(this).prop("checked") === true) {
+                            var id = $(this).prop("id").split('-');
+                            str += "," + id[1];
+                        }
+                    });
+                    $('#filterIds').val(str);
+                });
+
+
+            $('.chkSize').on('change',
+                function () {
+                    var str = "";
+                    $('.chkSize').each(function () {
+                        if ($(this).prop("checked") === true) {
+                            var id = $(this).prop("id").split('-');
+                            str += "," + id[1];
+                        }
+                    });
+                    $('#sizeIds').val(str);
+                });
+
+
+
+        });
+    </script>
+}
