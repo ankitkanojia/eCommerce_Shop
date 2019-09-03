@@ -1,0 +1,38 @@
+﻿@using System.Security.Policy
+@using System.Web.Mvc
+@using System.Web.UI.WebControls
+@helper GetTreeView(List<ECommerce_Shop.Models.Category> siteMenu, long parentID)
+{
+    foreach (var i in siteMenu.Where(a => a.RootCategoryId.Equals(parentID)))
+    {
+        <li>
+            @if (string.IsNullOrEmpty(i.CustomUrl))
+            {
+                <a href="/Catalog/Index/@i.CategoryId">@i.Name</a>
+            }
+            else
+            {
+                if (i.CustomUrl == "javascript:void(0)")
+                {
+                    <a href="@i.CustomUrl">@i.Name</a>
+                }
+                else
+                {
+                    <a href="/@i.CustomUrl">@i.Name</a>
+                }
+            }
+
+            @{var submenu = siteMenu.Where(a => a.RootCategoryId.Equals(i.CategoryId)).Count();}
+            @if (submenu > 0)
+            {
+                <i class="fa fa-angle-right"></i>
+            }
+            @if (submenu > 0)
+            {
+                <ul>
+                    @TreeView.GetTreeView(siteMenu, i.CategoryId)
+                </ul>
+            }
+        </li>
+    }
+}
