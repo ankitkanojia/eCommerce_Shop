@@ -1,0 +1,249 @@
+﻿@model ContainerPageVm
+@{
+    ViewBag.Title = "video";
+    ViewBag.H1Title = "Sample";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+    var categoryList = CommonFunctions.GetVideoCategory();
+    var isActivate = "active";
+}
+
+<style>
+    .file .file-name:hover {
+        cursor: pointer !important;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>
+            Video Upload
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0)">Video</a>
+            </li>
+            <li class="active">
+                <strong>Upload</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-md-12">
+            @Html.Partial("~/Areas/ControlPanel/Views/Shared/_AlertPanel.cshtml")
+        </div>
+
+        <div class="col-md-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <h3 class="m-t-none m-b">Video Details</h3>
+                    @using (Html.BeginForm("Add", "Video", new { area = "ControlPanel" }, FormMethod.Post, new { id = "frm", enctype = "multipart/form-data" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Video Category</label>
+                                    @Html.DropDownListFor(m => m.CategoryId, categoryList, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            @*<div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Video URL</label>
+                                        <input id="VideoUrl" class="form-control" name="VideoUrl" type="text" />
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+                                </div>*@
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Upload Image</label>
+                                    <input id="UploadedImage" type="file" name="UploadedImage" accept="image/*" />
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Upload Video</label>
+                                    <input id="UploadedVideo" type="file" name="UploadedVideo" accept="video/*" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div id="errorTxt"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Save changes</button>
+                                    <button class="btn btn-default" type="reset">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="tabs-container">
+                <div class="tabs-right">
+                    <ul class="nav nav-tabs">
+                        @foreach (var category in categoryList.Where(m => !string.IsNullOrEmpty(m.Value)))
+                        {
+                            <li class="@isActivate"><a data-toggle="tab" href="#tab-@category.Value"> @category.Text</a></li>
+                            isActivate = string.Empty;
+                        }
+                        @{ isActivate = "active"; }
+                    </ul>
+                    <div class="tab-content ">
+                        @foreach (var category in categoryList.Where(m => !string.IsNullOrEmpty(m.Value)))
+                        {
+                            <div id="tab-@category.Value" class="tab-pane @isActivate">
+                                <div class="panel-body">
+                                    @if (Model.videoDetails.Any() && Model.videoDetails.Where(m => m.CategoryId.ToString() == category.Value).Count() > 0)
+                                    {
+                                        foreach (var video in Model.videoDetails.Where(m => m.CategoryId.ToString() == category.Value))
+                                        {
+                                            <div class="col-lg-6" id="VideoBox_@video.VideoId">
+                                                <div class="">
+                                                    @*file-box*@
+                                                    <div class="file">
+                                                        <span class="corner"></span>
+                                                        @if (!video.IsVideo)
+                                                        {
+                                                            <div class="image" style="height:150px;">
+                                                                <img alt="image" class="img-fluid" style="width:100%;height:150px" src="@Url.Content(StaticValues.ContainerImagePath + video.ImageName)">
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <iframe width="100%" src="@Url.Content(StaticValues.ContainerVideoPath + video.VideoName)" frameborder="0" allowfullscreen></iframe>
+                                                        }
+                                                        <div class="file-name text-center" onclick="Delete('@video.VideoId')">
+                                                            <i class="fa fa-trash"></i> DELETE
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <strong>No Video uploaded to this category</strong>
+                                    }
+                                </div>
+                            </div>
+
+                            isActivate = string.Empty;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/Content/Backend/plugins/dataTables/dataTablesStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#frm").validate({
+                rules: {
+                    CategoryId: {
+                        required: true
+                    }
+                }
+            });
+
+        });
+    </script>
+
+
+    @*Datatable plugin*@
+    <script type="text/javascript">
+
+        var table;
+        $(document).ready(function () {
+
+            $('.dataTables-example tfoot th').each(function () {
+                var title = $(this).text();
+                if (title.length !== 0) {
+                    $(this).html('<input class="footer-form-control" type="text" placeholder="' + title + '" />');
+                }
+            });
+
+            // DataTable
+            table = $('.dataTables-example').DataTable();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change',
+                    function () {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+            });
+        });
+
+    </script>
+
+    <script>
+
+        var Delete = function(id, isLive) {
+            swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Video", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { id: id },
+                        success: function(data) {
+                            if (data.status) {
+                                $("#VideoBox_" + id).remove();
+                                swal(data.message, "", "success");
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+        }
+
+    </script>
+}

@@ -1250,6 +1250,12 @@
     <Content Include="Areas\ControlPanel\Views\Shared\_TopNavbar.cshtml" />
     <Content Include="Areas\ControlPanel\Views\Shared\_TopNavbar2.cshtml" />
     <Content Include="Areas\ControlPanel\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\FAQ\Add.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\FAQ\Edit.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\FAQ\Index.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Sample\Form.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Sample\Index.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Video\Index.cshtml" />
     <None Include="packages.config" />
     <Content Include="Scripts\Backend\api\typehead_collection.json" />
     <Content Include="Scripts\Backend\plugins\chartist\chartist.min.js.map" />
