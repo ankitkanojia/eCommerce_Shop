@@ -13,7 +13,7 @@ namespace ECommerce_Shop
                  "Default",
                  "{controller}/{action}/{id}",
                  new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                new[] { "EKart_v1.Controllers" }
+                new[] { "ECommerce_Shop.Controllers" }
             );
         }
     }

@@ -179,6 +179,11 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\ControlPanel\Controllers\AuthController.cs" />
+    <Compile Include="Areas\ControlPanel\Controllers\ColorController.cs" />
+    <Compile Include="Areas\ControlPanel\Controllers\FAQController.cs" />
+    <Compile Include="Areas\ControlPanel\Controllers\SampleController.cs" />
+    <Compile Include="Areas\ControlPanel\Controllers\VideoController.cs" />
     <Compile Include="Areas\ControlPanel\ControlPanelAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
@@ -1206,7 +1211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\ControlPanel\Controllers\" />
     <Folder Include="Areas\ControlPanel\Models\" />
     <Folder Include="Areas\ControlPanel\Views\Shared\" />
     <Folder Include="Uploads\Advertisement\" />
