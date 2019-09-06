@@ -1,0 +1,99 @@
+﻿@model FAQVm
+@{
+    ViewBag.Title = "Edit - product";
+    ViewBag.H1Title = "Product";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>FAQ</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Faq")">FAQ</a>
+            </li>
+            <li class="active">
+                <strong>Edit</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-md-12">
+            @Html.Partial("~/Areas/ControlPanel/Views/Shared/_AlertPanel.cshtml")
+        </div>
+
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    @using (Html.BeginForm("Edit", "Faq", new {area = "ControlPanel"}, FormMethod.Post, new {id = "frm"}))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.FAQId)
+
+                        <section>
+                            <h2><strong>FAQ Details</strong></h2>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Question</label>
+                                        @Html.TextBoxFor(m => m.Question, new {@class = "form-control"})
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Answer</label>
+                                        @Html.TextAreaFor(m => m.Answer, new {@class = "form-control", rows = "3"})
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="submit">Edit changes</button>
+                                        <button class="btn btn-default" type="reset">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#frm").validate({
+                rules: {
+                    Question: {
+                        required: true
+                    },
+                    Answer: {
+                        required: true
+                    }
+                }
+            });
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Sample";
+    ViewBag.H1Title = "Sample";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Sample Page</h2>
+        <ol class="breadcrumb">
+            <li class="active">
+                <a href="javascript:void(0)">Sample Form Elements</a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form method="post" class="" id="frm">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Text Box</label>
+                                    <input type="text" class="form-control" name="Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Color picker Text box</label>
+                                    <input type="text" class="form-control demo1" value="#5367ce" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Tag Input</label><br />
+                                    <input name="HashTag" class="tagsinput form-control" type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>CKEDITOR</label>
+                                    <textarea name="Body" id="editor1" rows="10" cols="80">
+                                        This is my textarea to be replaced with CKEditor.
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <hr />
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Add changes</button>
+                                    <button class="btn btn-default" type="reset">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/Content/Backend/plugins/iCheck/iCheckStyles")
+    @Styles.Render("~/plugins/tagInputsStyles")
+    @Styles.Render("~/Content/Backend/plugins/colorpicker/colorpickerStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/ckeditor")
+    @Scripts.Render("~/plugins/validate")
+    @Scripts.Render("~/plugins/colorpicker")
+
+    @*Taginput plugin*@
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+        });
+
+    </script>
+
+    @*Ckeditor Plugin*@
+    <script>
+
+        CKEDITOR.basePath = '/Scripts/Backend/plugins/ckeditor/';
+
+    </script>
+
+    <script>
+        CKEDITOR.replace('editor1');
+
+        CKEDITOR.instances.editor1.on('change', function () {
+            CKEDITOR.instances.editor1.updateElement();
+        });
+    </script>
+
+    @*Jquery Validation*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#frm").validate({
+                ignore: [],
+                rules: {
+                    Name: {
+                        required: true
+                    },
+                    Subject: {
+                        required: true
+                    },
+                    Body: {
+                        required: true
+                    },
+                    HashTag: {
+                        required: true
+                    },
+                    FromId: {
+                        required: true
+                    },
+                    BccId: {
+                        required: true
+                    }
+                }
+            });
+
+        });
+    </script>
+
+    @*Color picker Plugin*@
+    <script>
+        $('.demo1').colorpicker();
+    </script>
+
+}
+
+
+

@@ -1,0 +1,184 @@
+﻿@model List<FAQVm>
+@{
+    ViewBag.Title = "FAQ List";
+    ViewBag.H1Title = "Sample";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>
+            FAQ
+            <a class="btn btn-primary btn-xs pull-right" href="@Url.Action("Add", "Faq", new { area = "ControlPanel"  , @id = string.Empty})"><i class="fa fa-plus"></i> Add</a>
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0)">FAQ</a>
+            </li>
+            <li class="active">
+                <strong>List</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-md-12">
+            @Html.Partial("~/Areas/ControlPanel/Views/Shared/_AlertPanel.cshtml")
+        </div>
+
+        <div class="col-md-12" id="faqList">
+            @if (Model.Any())
+            {
+                foreach (var faq in Model)
+                {
+                    <div class="faq-item" id="faqitem_@faq.FAQId">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <a data-toggle="collapse" href="#faq_@faq.FAQId" class="faq-question">@faq.Question</a>
+                                <small><i class="fa fa-clock-o"></i> @faq.Date.ToString("hh:mm tt") - @faq.Date.ToString("dd.MM.yyyy")</small>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="btn-group">
+                                    <a href="@Url.Action("Edit","Faq", new { area ="ControlPanel" , id= faq.FAQId })" class="btn-white btn btn-xs">Edit</a>
+                                    <button class="btn-default btn btn-xs" onclick="Delete(@faq.FAQId)">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="faq_@faq.FAQId" class="panel-collapse collapse faq-answer">
+                                    <p>
+                                        @faq.Answer
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="faq-item">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <a class="faq-question">No FAQ added yet.</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-12 hidden" id="faqListClone">
+            <div class="faq-item">
+                <div class="row">
+                    <div class="col-md-10">
+                        <a class="faq-question">No FAQ added yet.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/Content/Backend/plugins/dataTables/dataTablesStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/validate")
+
+    @*Datatable plugin*@
+    <script type="text/javascript">
+
+        var table;
+        $(document).ready(function () {
+
+            $('.dataTables-example tfoot th').each(function () {
+                var title = $(this).text();
+                if (title.length !== 0) {
+                    $(this).html('<input class="footer-form-control" type="text" placeholder="' + title + '" />');
+                }
+            });
+
+            // DataTable
+            table = $('.dataTables-example').DataTable({
+                "pageLength": 5
+            });
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change',
+                    function () {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+            });
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#frm").validate({
+                rules: {
+                    Name: {
+                        required: true
+                    }
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+
+        var Delete = function(id) {
+            swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Faq", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status) {
+                                $("#faqitem_" + id).remove();
+                                if ($("#faqList").find(".faq-item").length === 0) {
+                                    $("#faqList").html('');
+                                    var clonedDiv = $.trim($("#faqListClone").html());
+                                    $("#faqList").html(clonedDiv);
+                                }
+                                swal(data.message, "", "success");
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+        }
+
+    </script>
+}
