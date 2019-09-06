@@ -1,0 +1,280 @@
+﻿@model List<ContactVm>
+@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.H1Title = "Dashboard";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>Dashboard</h2>
+        <ol class="breadcrumb">
+            <li class="active">
+                <a href="javascript:void(0)">Dashboard</a>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile No</th>
+                                <th width="15%">Date - Time</th>
+                                <th class="text-center" width="6%">Details</th>
+                                <th width="6%" data-orderable="false">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Any())
+                            {
+                                foreach (var contactDetail in Model)
+                                {
+                                    <tr class="gradeX" id="@contactDetail.ContactId">
+                                        <td>@contactDetail.Name</td>
+                                        <td>@contactDetail.Email</td>
+                                        <td>@contactDetail.Mobile</td>
+                                        <td>@contactDetail.CreatedDate.ToString("dd-MM-yyyy hh:mm tt")</td>
+                                        <td class="text-center">
+                                            @if (contactDetail.IsProductInquiry)
+                                            {
+                                                <button onclick="OpenModal(@contactDetail.ContactId)" class="btn btn-white"><i class="fa fa-eye"></i> </button>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button onclick="Delete(@contactDetail.ContactId)" class="btn btn-white"><i class="fa fa-trash"></i> </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile No</th>
+                                <th>Date - Time</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="ModalCartDetails" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Cart Details</h4>
+                <span><strong>Name : </strong><small class="font-bold" id="Name"></small></span><br />
+                <span><strong>Email : </strong><small class="font-bold" id="Email"></small> | <strong>Mobile No : </strong><small class="font-bold" id="Mobile"></small> </span>
+            </div>
+            <div class="modal-body">
+                <table class="table table-stripped table-bordered" id="tblProductDetails">
+                    <thead>
+                        <tr>
+                            <th data-orderable="false" class="text-center" width="10%">&nbsp;</th>
+                            <th class="text-center" style="width: 40%">
+                                Product Name
+                            </th>
+                            <th style="width: 8%">
+                                Color
+                            </th>
+                            <th style="width: 8%">
+                                Size
+                            </th>
+                            <th style="width: 4%">
+                                QTY
+                            </th>
+                            <th class="text-right" style="width: 10%">
+                                Price
+                            </th>
+                            <th style="width: 4%">
+                                Discount
+                            </th>
+                            <th style="width: 4%">
+                                Tax
+                            </th>
+                            <th class="text-right" style="width: 20%">
+                                Payable Price
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" onclick="CloseModal();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/Content/Backend/plugins/dataTables/dataTablesStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/dataTables")
+
+
+    @*Datatable plugin*@
+    <script type="text/javascript">
+
+        var table;
+        $(document).ready(function() {
+
+            $('.dataTables-example tfoot th').each(function() {
+                var title = $(this).text();
+                if (title.length != 0) {
+                    $(this).html('<input class="footer-form-control" type="text" placeholder="' + title + '" />');
+                }
+            });
+
+            // DataTable
+            table = $('.dataTables-example').DataTable({
+                "pageLength": 10,
+                "aaSorting": []
+            });
+
+            // Apply the search
+            table.columns().every(function() {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change',
+                    function() {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+            });
+        });
+
+        var CloseModal = function() {
+            $("#ModalCartDetails").modal("hide");
+        }
+
+        var OpenModal = function(id) {
+            $("#ModalCartDetails").find("#Name").text('');
+            $("#ModalCartDetails").find("#Email").text('No Email Provided');
+            $("#ModalCartDetails").find("#Mobile").text('');
+            $("#tblProductDetails").find("tbody").html('');
+            $.ajax({
+                url: "@Url.Action("GetProductDetails", "Dashboard", new {area = "ControlPanel"})",
+                type: "POST",
+                data: { id: id },
+                dataType: "json",
+                success: function(data) {
+                    if (data.status) {
+                        $("#ModalCartDetails").find("#Name").text(data.contactDetails.Name);
+                        if (data.contactDetails.Email.length !== 0) {
+                            $("#ModalCartDetails").find("#Email").text(data.contactDetails.Email);
+                        }
+                        $("#ModalCartDetails").find("#Mobile").text(data.contactDetails.Mobile);
+                        $.each(data.cartdetails,
+                            function() {
+                                var dynamicRow =
+                                    "<tr>" +
+                                        "<td><img id='categoryImage' src='" +
+                                        this.ProductImage +
+                                        "' alt='your image' width='48' height='48'></td>" +
+                                        "<td><a href='/ControlPanel/Product/Edit/2' target='blank'>" +
+                                        this.ProductName +
+                                        "</a></td>" +
+                                        "<td class='text-center'>" +
+                                        this.ColorName +
+                                        " <br /><i class='fa fa-circle' style='color:" +
+                                        this.ColorHex +
+                                        "'></i></td>" +
+                                        "<td class='text-center'>" +
+                                        this.SizeName +
+                                        "</td>" +
+                                        "<td><label class='label label-success'>" +
+                                        this.Quantity +
+                                        "</label></td>" +
+                                        "<td class='text-right'><strong>Rs</strong> " +
+                                        this.Price.toFixed(2) +
+                                        "</td>" +
+                                        "<td>" +
+                                        this.Discount +
+                                        "%</td>" +
+                                        "<td>" +
+                                        this.TAX +
+                                        "%</td>" +
+                                        "<td class='text-right'>" +
+                                        this.PayableAmount.toFixed(2) +
+                                        "</td>" +
+                                        "</tr>";
+                                $("#tblProductDetails").find("tbody").append(dynamicRow);
+                            });
+
+                        var footerRow =
+                            "<tr style='font-size: 17px;color:#808080;font-weight:bold;'><td colspan='8' class='text-right'>Total Amount <small><strong>(Rs)</strong></small> : </td><td class='text-right'>" +
+                                data.contactDetails.TotalAmount.toFixed(2) +
+                                "</td></tr>";
+                        $("#tblProductDetails").find("tbody").append(footerRow);
+                        $("#ModalCartDetails").modal("show");
+                    } else {
+                        swal(data.message, "", "error");
+                    }
+                },
+                error: function() {
+                    swal(data.message, "", "error");
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+
+        var Delete = function(id) {
+            swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Dashboard", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status) {
+                                table.row("#" + id).remove().draw();
+                                swal(data.message, "", "success");
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+        }
+
+    </script>
+}
+

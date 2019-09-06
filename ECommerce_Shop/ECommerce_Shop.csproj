@@ -181,6 +181,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\ControlPanel\Controllers\AuthController.cs" />
     <Compile Include="Areas\ControlPanel\Controllers\ColorController.cs" />
+    <Compile Include="Areas\ControlPanel\Controllers\DashboardController.cs" />
     <Compile Include="Areas\ControlPanel\Controllers\FAQController.cs" />
     <Compile Include="Areas\ControlPanel\Controllers\SampleController.cs" />
     <Compile Include="Areas\ControlPanel\Controllers\VideoController.cs" />
@@ -1212,7 +1213,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\ControlPanel\Models\" />
-    <Folder Include="Areas\ControlPanel\Views\Shared\" />
     <Folder Include="Uploads\Advertisement\" />
   </ItemGroup>
   <ItemGroup>
@@ -1236,6 +1236,20 @@
     <Content Include="App_Code\TreeView.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\ControlPanel\Views\Auth\ForgotPassword.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Auth\Index.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Auth\ResetPassword.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_AlertPanel.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_Footer.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_LayoutAuth.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_Navigation.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_NavigationOffCanvas.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_RightSidebar.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_SkinConfig.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_TopNavbar.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Shared\_TopNavbar2.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\Dashboard\Index.cshtml" />
     <None Include="packages.config" />
     <Content Include="Scripts\Backend\api\typehead_collection.json" />
     <Content Include="Scripts\Backend\plugins\chartist\chartist.min.js.map" />

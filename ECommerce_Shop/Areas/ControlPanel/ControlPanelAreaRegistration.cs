@@ -17,7 +17,7 @@ namespace ECommerce_Shop.Areas.ControlPanel
             context.MapRoute(
                 "ControlPanel_default",
                 "ControlPanel/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+                new { controller = "Dashboard", action = "Index", AreaName = "ControlPanel", id = UrlParameter.Optional }
             );
         }
     }
