@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/Images/Frontend/@StaticValues.feviconURL" />
+    <title>ControlPanel</title>
+
+
+    <meta name="description" content="@ViewBag.MtDescription">
+    <meta name="keywords" content="@ViewBag.MtKeywords" />
+    <meta name="author" content="dev">
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+    <!-- Add local styles, mostly for plugins css file -->
+    @if (IsSectionDefined("Styles"))
+    {
+        @RenderSection("Styles", required: false)
+    }
+
+    <!-- Add jQuery Style direct - used for jQGrid plugin -->
+    <link href="@Url.Content("~/Scripts/Backend/plugins/jquery-ui/jqueryuiStyles")" rel="stylesheet" type="text/css" />
+    <!-- Primary Inspinia style -->
+    <link href="~/fonts/Backend/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/Content/Backend/css")
+</head>
+<body class="fixed-sidebar">
+    <h1 class="displaynone">@ViewBag.H1Title</h1>
+    <!-- Wrapper-->
+    <!-- PageClass give you ability to specify custom style for specific view based on action -->
+    <div id="wrapper" class="@Html.PageClass()">
+        <!-- Navigation -->
+        @Html.Partial("_Navigation")
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
+            <!-- Top Navbar -->
+            @Html.Partial("_TopNavbar")
+            <!-- Main view  -->
+            @RenderBody()
+            <!-- Footer -->
+            @Html.Partial("_Footer")
+        </div>
+        <!-- End page wrapper-->
+    </div>
+    <!-- End wrapper-->
+    <!-- Section for main scripts render -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/slimScroll")
+    @Scripts.Render("~/bundles/inspinia")
+    @Scripts.Render("~/plugins/ladda")
+
+    <!-- Skin config script - only for demo purpose-->
+    @Scripts.Render("~/bundles/skinConfig")
+
+    <!-- Success | Failer | Error -->
+    <script>
+        $(document).ready(function () {
+
+            var successMsg = $('#SuccessMsg').val();
+            if (successMsg !== "") {
+                $('#SuccessMsgData').text(successMsg);
+                $('#SuccessMsg').val("");
+            }
+
+            var errorMsg = $('#ErrorMsg').val();
+            if (errorMsg !== "") {
+                $('#ErrorMsgData').text(errorMsg);
+                $('#ErrorMsg').val("");
+            }
+
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 10000);
+
+        });
+    </script>
+
+    <script>
+        function readURL(id, input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#' + id).attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+    <!-- Handler for local scripts -->
+    @RenderSection("scripts", required: false)
+</body>
+</html>

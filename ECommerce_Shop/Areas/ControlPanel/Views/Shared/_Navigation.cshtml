@@ -1,0 +1,70 @@
+﻿<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header text-center">
+                <div class="dropdown profile-element">
+                    <span>
+                        <img id="leftNavProfileImage" alt="image" style="max-width: 80px" class="img-circle" src="~/Images/Backend/defaultuser.png" />
+                    </span>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:void(0)">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold">Administrator</strong>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                @*<div class="logo-element">
+                IN+
+            </div>*@
+            </li>
+            <li class="@Html.IsSelected(controller: "Dashboard")">
+                <a href="@Url.Action("Index", "Dashboard", new { area = "ControlPanel" })"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.widgets">Dashboard</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "Category")">
+                <a href="@Url.Action("Index", "Category", new { area = "ControlPanel" , @id = string.Empty })"><i class="fa fa-sitemap"></i> <span class="nav-label" data-i18n="nav.widgets">Category</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "Size")">
+                <a href="@Url.Action("Index", "Size", new { area = "ControlPanel" , @id = string.Empty })"><i class="fa fa-scissors"></i> <span class="nav-label" data-i18n="nav.widgets">Size</span> </a>
+            </li>
+            @*<li class="@Html.IsSelected(controller: "Brand")">
+            <a href="@Url.Action("Index", "Brand", new { area = "ControlPanel" , @id = string.Empty })"><i class="fa fa-500px"></i> <span class="nav-label" data-i18n="nav.widgets">Brand</span> </a>
+        </li>*@
+            <li class="@Html.IsSelected(controller: "Color")">
+                <a href="@Url.Action("Index", "Color", new { area = "ControlPanel" , @id = string.Empty })"><i class="fa fa-eyedropper"></i> <span class="nav-label" data-i18n="nav.widgets">Color</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "Product")">
+                <a href="@Url.Action("Index", "Product", new { area = "ControlPanel" })"><i class="fa fa-list-alt"></i> <span class="nav-label" data-i18n="nav.widgets">Product(s)</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "Faq")">
+                <a href="@Url.Action("Index", "Faq", new { area = "ControlPanel" })"><i class="fa fa-question-circle"></i> <span class="nav-label" data-i18n="nav.widgets">FAQs</span> </a>
+            </li>
+            @*<li class="@Html.IsSelected(controller: "EmailTemplate")">
+          <a href="@Url.Action("Index", "EmailTemplate", new { area = "ControlPanel" })"><i class="fa fa-envelope"></i> <span class="nav-label" data-i18n="nav.widgets">Email Templates</span> </a>
+        </li>*@
+            <li class="@Html.IsSelected(controller: "Offer")">
+                <a href="@Url.Action("Index", "Offer", new { area = "ControlPanel" })"><i class="fa fa-gift"></i> <span class="nav-label" data-i18n="nav.widgets">Offer</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "FileManager") || @Html.IsSelected(controller: "Video")">
+                <a href="#"><i class="fa fa-folder"></i> <span class="nav-label">File Manager</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li class="@Html.IsSelected(controller: "FileManager")"><a href="@Url.Action("Index", "FileManager", new { area = "ControlPanel" , id =(int)EnumList.ImageType.PARTNERS })">Partner</a></li>
+                    <li class="@Html.IsSelected(controller: "FileManager")"><a href="@Url.Action("Index", "FileManager", new { area = "ControlPanel" , id =(int)EnumList.ImageType.SLIDER })">Slider</a></li>
+                    <li class="@Html.IsSelected(controller: "Video")"><a href="@Url.Action("Index", "Video", new { area = "ControlPanel" })">Video(s)</a></li>
+                </ul>
+            </li>
+            <li class="@Html.IsSelected(controller: "Configurations")">
+                <a href="@Url.Action("Index", "Configurations", new { area = "ControlPanel" })"><i class="fa fa-gear"></i> <span class="nav-label" data-i18n="nav.widgets">Configurations</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "CollectionPoint")">
+                <a href="@Url.Action("Index", "CollectionPoint", new { area = "ControlPanel" })"><i class="fa fa-location-arrow"></i> <span class="nav-label" data-i18n="nav.widgets">Collection Point(s)</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "Advertisement")">
+                <a href="@Url.Action("Index", "Advertisement", new { area = "ControlPanel" })"><i class="fa fa-tv"></i> <span class="nav-label" data-i18n="nav.widgets">Advertisement(s)</span> </a>
+            </li>
+            @*<li class="@Html.IsSelected(controller: "Sample")">
+        <a href="@Url.Action("Index", "Sample", new { area = "ControlPanel" })"><i class="fa fa-safari"></i> <span class="nav-label" data-i18n="nav.widgets">Sample</span> </a>
+         </li>*@
+        </ul>
+    </div>
+</nav>

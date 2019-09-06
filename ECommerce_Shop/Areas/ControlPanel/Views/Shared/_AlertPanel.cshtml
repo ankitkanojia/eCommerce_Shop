@@ -1,0 +1,53 @@
+﻿
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <a class="alert-link" href="javascript:void(0)">Success : </a>
+        <span id="SuccessMsgData"></span>
+    </div>
+    <input type="hidden" id="SuccessMsg" value="@TempData["Success"]" />
+}
+else
+{
+    <input type="hidden" id="SuccessMsg" value="" />
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <a class="alert-link" href="javascript:void(0)">Error : </a>
+        <span id="ErrorMsgData"></span>
+    </div>
+    <input type="hidden" id="ErrorMsg" value="@TempData["Error"]" />
+}
+else
+{
+    <input type="hidden" id="ErrorMsg" value="" />
+}
+
+
+@{
+    var allErrors = ViewData.ModelState.Values.SelectMany(v => v.Errors);
+    var modelErrors = allErrors as ModelError[] ?? allErrors.ToArray();
+    if (modelErrors.Any())
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            @foreach (var item in modelErrors)
+            {
+                @: <a class="alert-link" href="#">Alert : </a> @item.ErrorMessage
+                @: <br/>
+            }
+        </div>
+    }
+}
+
+
+
+
+
+
+

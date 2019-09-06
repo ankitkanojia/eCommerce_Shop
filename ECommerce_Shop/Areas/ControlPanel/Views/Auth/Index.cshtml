@@ -1,0 +1,87 @@
+﻿@using System.Web.Optimization
+@model LoginVm
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Areas/ControlPanel/Views/Shared/_LayoutAuth.cshtml";
+}
+
+
+
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name" style="font-size: 10em">@StaticValues.SiteFirstName</h1>
+            <h1 class="logo-name" style="font-size: 8em;margin-top:-22px">@StaticValues.SiteLastName</h1>
+        </div>
+        <p>Enter your email & password to logged in.</p>
+
+        @using (Html.BeginForm("Index", "Auth", FormMethod.Post, new { id = "frm", @class = "m-t", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(s => s.ReturnUrl)
+
+            var allErrors = ViewData.ModelState.Values.SelectMany(v => v.Errors);
+            var modelErrors = allErrors as ModelError[] ?? allErrors.ToArray();
+            if (modelErrors.Any())
+            {
+                <div class="alert alert-danger" role="alert">
+                    @foreach (var item in modelErrors)
+                    {
+                        @: <a class="alert-link" href="#">Alert : </a> @item.ErrorMessage
+                        @: <br />
+                    }
+                </div>
+            }
+
+            if (Model.IsShowSendVerificationEmail)
+            {
+                <div class="form-group pull-right">
+                    <a class="alert-link text-primary" href="@Url.Action("VerificationEmail", "Home", new{id = Model.UserId})"> Don`t receive email? Click here.</a>
+                </div>
+            }
+
+            if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <a class="alert-link" href="#">Success : </a> <br /> @TempData["Success"]
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "abc@xyz.com" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "XXXXXX" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+            <button type="button" class="ladda-button btn btn-primary block full-width m-b" data-style="expand-right">Login</button>
+            <a href="@Url.Action("ForgotPassword", "Auth")">
+                <small>Forgot password?</small>
+            </a>
+
+        }
+        <p class="m-t"> <small>Copyright @StaticValues.SiteFirstName@StaticValues.SiteLastName &copy; 2019</small> </p>
+    </div>
+</div>
+
+@Styles.Render("~/plugins/laddaStyles")
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/passwordMeter")
+    @Scripts.Render("~/plugins/ladda")
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.ladda-button').ladda().click(function () {
+                $(this).ladda('start');
+                $('#frm').submit();
+            });
+        });
+
+    </script>
+}
