@@ -4,4 +4,3 @@
 *.xml linguist-detectable=false
 *.css linguist-detectable=false
 *.cs linguist-detectable=true
-*.cshtml linguist-detectable=true
