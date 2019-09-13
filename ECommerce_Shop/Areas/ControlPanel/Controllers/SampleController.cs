@@ -2,7 +2,7 @@
 
 namespace ECommerce_Shop.Areas.ControlPanel.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class SampleController : Controller
     {
         public ActionResult Index()

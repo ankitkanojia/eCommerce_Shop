@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity;
 
 namespace ECommerce_Shop.Areas.ControlPanel.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class BrandController : Controller
     {
         private DBEntities _db = new DBEntities();

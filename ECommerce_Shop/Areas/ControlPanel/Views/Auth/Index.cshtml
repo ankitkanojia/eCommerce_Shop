@@ -14,6 +14,7 @@
             <h1 class="logo-name" style="font-size: 10em">@StaticValues.SiteFirstName</h1>
             <h1 class="logo-name" style="font-size: 8em;margin-top:-22px">@StaticValues.SiteLastName</h1>
         </div>
+        <br />
         <p>Enter your email & password to logged in.</p>
 
         @using (Html.BeginForm("Index", "Auth", FormMethod.Post, new { id = "frm", @class = "m-t", role = "form" }))

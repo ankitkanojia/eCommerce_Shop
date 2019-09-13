@@ -13,7 +13,7 @@ using System.Web.Mvc;
 
 namespace ECommerce_Shop.Areas.ControlPanel.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private DBEntities _db = new DBEntities();

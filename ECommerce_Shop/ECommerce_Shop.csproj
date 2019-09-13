@@ -1283,6 +1283,7 @@
     <Content Include="Areas\ControlPanel\Views\Product\Test.cshtml" />
     <Content Include="Areas\ControlPanel\Views\Product\Vertical.cshtml" />
     <Content Include="Areas\ControlPanel\Views\Size\Index.cshtml" />
+    <Content Include="Areas\ControlPanel\Views\_ViewStart.cshtml" />
     <None Include="packages.config" />
     <Content Include="Scripts\Backend\api\typehead_collection.json" />
     <Content Include="Scripts\Backend\plugins\chartist\chartist.min.js.map" />

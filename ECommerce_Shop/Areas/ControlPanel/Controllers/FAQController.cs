@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace ECommerce_Shop.Areas.ControlPanel.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class FaqController : Controller
     {
         private DBEntities db = new DBEntities();
