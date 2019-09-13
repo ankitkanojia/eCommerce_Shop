@@ -1,0 +1,228 @@
+﻿@model List<ConfigurationVm>
+@{
+    ViewBag.Title = "configurations";
+    ViewBag.H1Title = "Sample";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+    var logoUrl = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.LOGO) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.LOGO).ConfigurationValue : string.Empty;
+    var womenCover = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.WOMENCOVER) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.WOMENCOVER).ConfigurationValue : string.Empty;
+    var menCover = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.MENCOVER) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.MENCOVER).ConfigurationValue : string.Empty;
+    var kidsCover = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.KIDSCOVER) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.KIDSCOVER).ConfigurationValue : string.Empty;
+    var uniformCover = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.UNIFORMCOVER) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.UNIFORMCOVER).ConfigurationValue : string.Empty;
+    var studioCover = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.STUDIOCOVER) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.STUDIOCOVER).ConfigurationValue : string.Empty;
+    var mobileNo = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.MOBILENO) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.MOBILENO).ConfigurationValue : string.Empty;
+    var whatsAppNo = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.WHATSAPP) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.WHATSAPP).ConfigurationValue : string.Empty;
+    var emailAddress = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.EMAIL) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.EMAIL).ConfigurationValue : string.Empty;
+    var facebooklink = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.FBLink) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.FBLink).ConfigurationValue : string.Empty;
+    var linkedinlink = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.LILink) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.LILink).ConfigurationValue : string.Empty;
+    var twitterlink = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.TWLink) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.TWLink).ConfigurationValue : string.Empty;
+    var instagramlink = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.INSLink) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.INSLink).ConfigurationValue : string.Empty;
+    var aboutUS = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.ABOUTUS) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.ABOUTUS).ConfigurationValue : string.Empty;
+    var termsAndConditions = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.TERMSANDCONDITIONS) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.TERMSANDCONDITIONS).ConfigurationValue : string.Empty;
+    var privacypolicy = Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.PRIVACYPOLICY) != null ? Model.Find(m => m.ConfigurationId == (long)EnumList.Configurations.PRIVACYPOLICY).ConfigurationValue : string.Empty;
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>
+            Configurations
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0)">Configurations</a>
+            </li>
+            <li class="active">
+                <strong>Settings</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="col-md-12">
+                    @Html.Partial("~/Areas/ControlPanel/Views/Shared/_AlertPanel.cshtml")
+                </div>
+                <form id="frm" method="post" enctype="multipart/form-data" action="@Url.Action("Add","Configurations", new { area = "ControlPanel"})">
+                    <div class="row">
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="form-group text-center">
+                                    <label><strong>LOGO</strong></label><br>
+                                    <img style="width: 80px;height: 80px;" src="@Url.Content(StaticValues.ConfigurationPath + "logo/" + logoUrl)"><br />
+                                    <input name="logoContainer" type="file" style="width: 80px;margin-top: 5%;margin: 10px auto">
+                                    <small style="color: red">(* size 170 x 56)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="form-group text-center">
+                                    <label><strong>WOMEN Cover Photo</strong></label><br>
+                                    <img style="width: 80px;height: 80px;" src="@Url.Content(StaticValues.ConfigurationPath + "womenCover/" + womenCover)"><br />
+                                    <input name="womenContainer" type="file" style="width: 80px;margin-top: 5%;margin: 10px auto">
+                                    <small style="color: red">(* size 560 x 360)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="form-group text-center">
+                                    <label><strong>MEN Cover Photo</strong></label><br>
+                                    <img style="width: 80px;height: 80px;" src="@Url.Content(StaticValues.ConfigurationPath + "menCover/" + menCover)"><br />
+                                    <input name="menContainer" type="file" style="width: 80px;margin-top: 5%;margin: 10px auto">
+                                    <small style="color: red">(* size 560 x 360)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="form-group text-center">
+                                    <label><strong>KIDS Cover Photo</strong></label><br>
+                                    <img style="width: 80px;height: 80px;" src="@Url.Content(StaticValues.ConfigurationPath + "kidsCover/" + kidsCover)"><br />
+                                    <input name="kidsContainer" type="file" style="width: 80px;margin-top: 5%;margin: 10px auto">
+                                    <small style="color: red">(* size 560 x 360)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="form-group text-center">
+                                    <label><strong>UNIFORM Cover Photo</strong></label><br>
+                                    <img style="width: 80px;height: 80px;" src="@Url.Content(StaticValues.ConfigurationPath  + "uniformCover/"+ uniformCover)"><br />
+                                    <input name="uniformContainer" type="file" style="width: 80px;margin-top: 5%;margin: 10px auto">
+                                    <small style="color: red">(* size 270 x 360)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="form-group text-center">
+                                    <label><strong>STUDIO Cover Photo</strong></label><br>
+                                    <img style="width: 80px;height: 80px;" src="@Url.Content(StaticValues.ConfigurationPath  + "studioCover/"+ studioCover)"><br />
+                                    <input name="studioContainer" type="file" style="width: 80px;margin-top: 5%;margin: 10px auto">
+                                    <small style="color: red">(* size 270 x 360)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Mobile No</label>
+                                <input class="form-control" name="mobileno" value="@mobileNo" type="text" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Whats App</label>
+                                <input class="form-control" name="whatsappno" value="@whatsAppNo" type="text" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input class="form-control" name="email" value="@emailAddress" type="text" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Facebook Link</label>
+                                <input class="form-control" name="fblink" value="@facebooklink" type="text" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Twitter Link</label>
+                                <input class="form-control" name="twlink" value="@twitterlink" type="text" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Instagram Link</label>
+                                <input class="form-control" name="inslink" value="@instagramlink" type="text" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Linked Link</label>
+                                <input class="form-control" name="lilink" value="@linkedinlink" type="text" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>About Us</label>
+                                <textarea name="about" class="form-control requiredField" rows="3" required>@aboutUS</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Terms & Conditions</label>
+                                <textarea name="terms" class="form-control requiredField" rows="3" required>@termsAndConditions</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Privacy Policy</label>
+                                <textarea name="privacypolicy" class="form-control requiredField" rows="3" required>@privacypolicy</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Save changes</button>
+                            <button class="btn btn-default" type="reset">Reset</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/plugins/ckeditor")
+
+    @*Ckeditor Plugin*@
+    <script>
+
+        CKEDITOR.basePath = '/Scripts/Backend/plugins/ckeditor/';
+
+    </script>
+
+    <script>
+        CKEDITOR.replace('about');
+        CKEDITOR.instances.about.on('change',
+            function () {
+                CKEDITOR.instances.about.updateElement();
+            });
+        CKEDITOR.replace('terms');
+        CKEDITOR.instances.terms.on('change',
+            function () {
+                CKEDITOR.instances.terms.updateElement();
+            });
+        CKEDITOR.replace('privacypolicy');
+        CKEDITOR.instances.privacypolicy.on('change',
+            function () {
+                CKEDITOR.instances.privacypolicy.updateElement();
+            });
+    </script>
+}

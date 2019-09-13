@@ -1,0 +1,174 @@
+﻿@model EmailTemplateVm
+@{
+    ViewBag.Title = "Add - email template";
+    ViewBag.H1Title = "Sample";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Email Template</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "EmailTemplate")">Email Template</a>
+            </li>
+            <li class="active">
+                <strong>Add</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    @using (Html.BeginForm("Add", "EmailTemplate", new { area = "ControlPanel" }, FormMethod.Post, new { id = "frm" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+
+                        @Html.Partial("~/Areas/ControlPanel/Views/Shared/_AlertPanel.cshtml")
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Template Name</label>
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Template Name" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                    @Html.TextBoxFor(m => m.Subject, new { @class = "form-control", placeholder = "Subject" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>From Email</label>
+                                    @Html.TextBoxFor(m => m.FromId, new { @class = "form-control", placeholder = "From Email" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Bcc Email</label>
+                                    @Html.TextBoxFor(m => m.BccId, new { @class = "form-control", placeholder = "BCC Email" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Hash Tags</label><br />
+                                    @Html.TextBoxFor(m => m.HashTag, new { @class = "tagsinput form-control", @id = "tagsinput", placeholder = "Tag" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Body</label>
+                                    @Html.TextAreaFor(m => m.Body, new { @class = "form-control", id = "Body", rows = "10", cols = "80" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <hr />
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Save changes</button>
+                                    <button class="btn btn-default" type="reset">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/Content/Backend/plugins/iCheck/iCheckStyles")
+    @Styles.Render("~/plugins/tagInputsStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/ckeditor")
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+
+
+            $("#tagsinput").tagsinput({
+                tagClass: 'label label-primary'
+            });
+
+        });
+
+    </script>
+
+    <script>
+        CKEDITOR.replace('Body');
+
+        CKEDITOR.instances.Body.on('change', function () {
+            CKEDITOR.instances.Body.updateElement();
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#frm").validate({
+                ignore: "",
+                rules: {
+                    Name: {
+                        required: true
+                    },
+                    Subject: {
+                        required: true
+                    },
+                    Body: {
+                        required: true
+                    },
+                    HashTag: {
+                        required: true
+                    },
+                    FromId: {
+                        required: true,
+                        email: true
+                    }
+                }
+            });
+
+        });
+    </script>
+}
+
+
+

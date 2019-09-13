@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+}
+
+<form method="posto" action="@Url.Action("Test","Product", new {araa ="ControlPanel"})">
+    <h2>Test</h2>
+    <input id="imgUploader" onchange="readMultipleImage(this)" type="file" multiple="" />
+    <input id="collection" name="collection" />
+    <button type="button" onclick="test()">Submit</button>
+
+    <section id="ProductImages">
+        <h2><strong>Product Image(s)</strong></h2>
+        <hr />
+        <div class="row">
+            <div class="col-md-8">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="10%">
+                                    Preview
+                                </th>
+                                <th width="10%" class="text-center">
+                                    Sort order
+                                </th>
+                                <th width="8%" class="text-center">
+                                    Cover
+                                </th>
+                                <th data-orderable="false" class="text-center" width="8%">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+@section Styles {
+    @Styles.Render("~/Content/Backend/plugins/dataTables/dataTablesStyles")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/plugins/dataTables")
+    <script>
+        var randomNumber = Math.floor((Math.random() * 100000000000) + 1);
+        var imageArray = [];
+
+        function readMultipleImage(input) {
+            if (input.files) {
+                var filesAmount = input.files.length;
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+                    reader.fileExtension = input.files[i].name.replace(/^.*\./, '');
+                    reader.onload = function (e) {
+
+                        var currentCount = table.rows().count() + 1;
+                        randomNumber = parseInt(e.timeStamp) + parseInt(e.total) + parseInt(e.loaded);
+
+                        var isCover = false;
+                        var checked = "";
+                        if (currentCount === 1) {
+                            isCover = true;
+                            checked = "checked";
+                        }
+
+                        imageArray.push({
+                            isCover: isCover,
+                            currentId: randomNumber,
+                            extension: e.target.fileExtension,
+                            imageSrc: e.target.result
+                        });
+
+                        var jRow = "<tr><td class='text-center align-middle'><img id='categoryImage' src='" +
+                            e.target.result +
+                            "' alt='your image' width='48' height='48'></td><td class='align-middle'><input type='text' class='form-control srcount' value='" +
+                            currentCount +
+                            "'></td><td  class='text-center  align-middle' ><input type='radio' class='form-control coverImage' name='coverImage' " +
+                            checked +
+                            "></td><td class='text-center align-middle'><button onclick='RemoveArrayIndex(\"" +
+                            randomNumber +
+                            "\")' class='btn btn-white btnDeleteImage'><i class='fa fa-trash'></i> Delete</button></td></tr>";
+
+                        table.row.add($(jRow)).draw();
+                    };
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        }
+
+        function test() {
+            var formdata = new FormData(); 
+            formdata.append('things', JSON.stringify(imageArray));
+
+            $.ajax({
+                type: "POST",
+                url: "/ControlPanel/Product/Test",
+                data: formdata,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    alert(data.Result);
+                },
+                dataType: "json",
+                traditional: true
+            });
+        }
+    </script>
+
+
+    @*Datatable plugin*@
+    <script type="text/javascript">
+
+        var table;
+        $(document).ready(function () {
+
+            table = $('.dataTables-example').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false
+            });
+
+            $('.dataTables-example tbody').on('click',
+                '.btnDeleteImage',
+                function () {
+                    var rowcount = table.rows().count();
+                    if ($(this).closest("tr").find("input.coverImage").prop("checked") && rowcount > 1) {
+                        table.row($(this).parents('tr')).remove().draw();
+                        $('.dataTables-example tbody').find("tr:first").find("input.coverImage")
+                            .prop("checked", "checked");
+                    } else {
+                        table.row($(this).parents('tr')).remove().draw();
+                    }
+                });
+
+        });
+
+    </script>
+}

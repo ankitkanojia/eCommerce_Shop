@@ -1,0 +1,202 @@
+﻿@model FileManagerPageVm
+@{
+    ViewBag.Title = Model.type + " - Upload Image";
+    ViewBag.H1Title = "Sample";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+
+<style>
+    .file .file-name:hover {
+        cursor: pointer !important;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>
+            @Model.type Image(s)
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0)">Container</a>
+            </li>
+            <li class="active">
+                <strong>@Model.type Image(s)</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-md-12">
+            @Html.Partial("~/Areas/ControlPanel/Views/Shared/_AlertPanel.cshtml")
+        </div>
+
+        <div class="col-md-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    @using (Html.BeginForm("Add", "FileManager", new { area = "ControlPanel" }, FormMethod.Post, new { id = "frm", enctype = "multipart/form-data" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.typeId)
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>
+                                        Upload Image
+                                        @if (Model.type == "Partner")
+                                        {
+                                            <small style="color: red">(* size 50 x 60 is preferred size)</small>
+                                        }
+                                        else if (Model.type == "Slider")
+                                        {
+                                            <small style="color: red">(* size 1140 x 480 is preferred size)</small>
+                                        }
+                                        else if (Model.type == "Offer")
+                                        {
+                                            <small style="color: red">(* size 550 x 350 is preferred size)</small>
+                                        }
+                                    </label>
+                                    <input name="imageContainerFile" type='file' onchange="readURL('imageContainerFile',this)" /><br />
+                                    <br />
+                                    @if (Model.type == "Partner")
+                                    {
+                                        <img id="imageContainerFile" src="https://via.placeholder.com/50x60" alt="your image" height="60" width="50" />
+                                    }
+                                    else if (Model.type == "Slider")
+                                    {
+                                        <img id="imageContainerFile" src="https://via.placeholder.com/1140x480" alt="your image" height="150" width="100%" />
+                                    }
+                                    else if (Model.type == "Offer")
+                                    {
+                                        <img id="imageContainerFile" src="https://via.placeholder.com/550x350" alt="your image" height="150" width="100%" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Save changes</button>
+                                    <button class="btn btn-default" type="reset">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            @if (Model.containerDetails.Any())
+            {
+                if (Model.type == "Partner")
+                {
+                    foreach (var item in Model.containerDetails)
+                    {
+                        <div class="file-box" id="container_@item.ImageId">
+                            <div class="file">
+                                <span class="corner"></span>
+                                <div class="icon">
+                                    <img alt="image" class="img-fluid" src="@Url.Content(Model.imagePath + item.ImageName)">
+                                </div>
+                                <div class="file-name text-center" onclick="Delete('@item.ImageId')">
+                                    <i class="fa fa-trash"></i> DELETE
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    foreach (var item in Model.containerDetails)
+                    {
+                        <div class="col-md-6" id="container_@item.ImageId">
+                            <div class="file">
+                                <span class="corner"></span>
+                                <div class="image" style="height:150px;">
+                                    <img alt="image" class="img-fluid" style="width:100%;height:150px" src="@Url.Content(Model.imagePath + item.ImageName)">
+                                </div>
+                                <div class="file-name text-center" onclick="Delete('@item.ImageId')">
+                                    <i class="fa fa-trash"></i> DELETE
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <strong>No Image(s) uploaded to @Model.type container</strong>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/sweetAlertStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#frm").validate({
+                rules: {
+                    imageContainerFile: {
+                        required: true
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+
+        var Delete = function(id) {
+            swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "FileManager", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status) {
+                                $("#container_"+ id+"").remove();
+                                swal(data.message, "", "success");
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+        }
+
+    </script>
+}

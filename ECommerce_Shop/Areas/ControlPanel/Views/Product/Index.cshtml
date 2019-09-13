@@ -1,0 +1,286 @@
+﻿@model List<ProductVm>
+@{
+    ViewBag.Title = "Product";
+    ViewBag.H1Title = "Product";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>Product <a class="btn btn-primary btn-xs pull-right" href="@Url.Action("Add", "Product")"><i class="fa fa-plus"></i> Add</a></h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0)">Product List</a>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                            <tr>
+                                <th data-orderable="false" class="text-center" width="10%">&nbsp;</th>
+                                <th>Name</th>
+                                <th width="8%">Category</th>
+                                <th>SubCategory</th>
+                                <th class="text-center" width="10%">MRP</th>
+                                <th class="text-center" width="10%">Price</th>
+                                <th class="text-center" width="8%">SKU</th>
+                                <th width="4%" data-orderable="false" class="text-center">Clone</th>
+                                <th width="6%" data-orderable="false">Activate</th>
+                                <th width="10%" data-orderable="false" class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Any())
+                            {
+                                foreach (var productDetails in Model)
+                                {
+                                    <tr class="gradeX" id="@productDetails.ProductId">
+                                        <td class="text-center align-middle">
+                                            @if (!string.IsNullOrEmpty(productDetails.CoverImage))
+                                            {
+                                                <img id="categoryImage" src="@Url.Content(StaticValues.ProductImagePath + productDetails.CoverImage)" alt="your image" height="48" width="48" />
+                                            }
+                                            else
+                                            {
+                                                <img id="categoryImage" src="@Url.Content("~"+StaticValues.DefaultProductImagePath)" alt="your image" height="48" width="48" />
+                                            }
+                                        </td>
+                                        <td class="align-middle"><a target="_blank" href="@Url.Action("Detail","Catalog", new { id = productDetails.ProductId , area = "" })">@productDetails.ProductName</a></td>
+                                        <td class="align-middle">@productDetails.CategoryName</td>
+                                        <td class="align-middle">@productDetails.SubCategoryName</td>
+                                        <td class="text-center align-middle">Rs @productDetails.MRP</td>
+                                        <td class="text-center align-middle">Rs @productDetails.Price</td>
+                                        <td class="text-center align-middle">@productDetails.SKU</td>
+                                        <td class="align-middle">
+                                            <div class="btn-group">
+                                                <button class="btn-white btn btn-xs" onclick="CloneProduct(@productDetails.ProductId)"><i class="fa fa-copy"></i> Clone</button>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="switch">
+                                                <div class="onoffswitch">
+                                                    @{
+                                                        var statuschecked = string.Empty;
+                                                        if (productDetails.IsActive)
+                                                        {
+                                                            statuschecked = "checked";
+                                                        }
+                                                    }
+                                                    <input data-id="@productDetails.ProductId" type="checkbox" class="onoffswitch-checkbox cswitch" id="status_@productDetails.ProductId" @statuschecked>
+                                                    <label class="onoffswitch-label" for="status_@productDetails.ProductId">
+                                                        <span class="onoffswitch-inner"></span>
+                                                        <span class="onoffswitch-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="btn-group">
+                                                <a href="@Url.Action("Edit", "Product", new { area= "ControlPanel" , id = productDetails.ProductId})" class="btn-white btn btn-xs">Edit</a>
+                                                <button class="btn-white btn btn-xs" onclick="Delete(@productDetails.ProductId)">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>SubCategory</th>
+                                <th>MRP</th>
+                                <th>Price</th>
+                                <th>SKU</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/Content/Backend/plugins/dataTables/dataTablesStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/dataTables")
+
+
+    @*Datatable plugin*@
+    <script type="text/javascript">
+
+        var table;
+        $(document).ready(function() {
+
+            $('.dataTables-example tfoot th').each(function() {
+                var title = $(this).text();
+                if (title.length != 0) {
+                    $(this).html('<input class="footer-form-control" type="text" placeholder="' + title + '" />');
+                }
+            });
+
+            // DataTable
+            table = $('.dataTables-example').DataTable();
+
+            // Apply the search
+            table.columns().every(function() {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change',
+                    function() {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+            });
+
+            $('.dataTables-example').on('draw.dt',
+                function() {
+                    $('.cswitch').click(function(event) {
+                        event.preventDefault();
+                        var currentStatus = this.checked;
+                        var id = $(this).attr("data-id");
+                        $.ajax({
+                            url: "@Url.Action("ActivateDeActivate", "Product", new {area = "ControlPanel"})",
+                            type: "POST",
+                            data: { status: currentStatus, id: id },
+                            dataType: "json",
+                            success: function(data) {
+                                if (data.status) {
+                                    swal(data.message, "", "success");
+                                    $("#status_" + id).prop("checked", currentStatus);
+                                } else {
+                                    swal(data.message, "", "error");
+                                }
+                            },
+                            error: function() {
+                                swal(data.message, "", "error");
+                            }
+                        });
+                    });
+                });
+        });
+
+    </script>
+
+    @*Swal plugin*@
+    <script>
+
+        var Delete = function(id) {
+            swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Product", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status) {
+                                table.row("#" + id).remove().draw();
+                                swal(data.message, "", "success");
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+        }
+
+        var CloneProduct = function(id) {
+            swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, clone it!",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("CloneProduct", "Product", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status) {
+                                swal({
+                                        title: "",
+                                        text: data.message,
+                                        type: "success"
+                                    },
+                                    function() {
+                                        location.reload();
+                                    });
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+        }
+
+    </script>
+
+    @*On/Off Switch plugin*@
+    <script>
+        $(document).ready(function() {
+
+            $('.cswitch').click(function(event) {
+                event.preventDefault();
+                var currentStatus = this.checked;
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    url: "@Url.Action("ActivateDeActivate", "Product", new {area = "ControlPanel"})",
+                    type: "POST",
+                    data: { status: currentStatus, id: id },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.status) {
+                            swal(data.message, "", "success");
+                            $("#status_" + id).prop("checked", currentStatus);
+                        } else {
+                            swal(data.message, "", "error");
+                        }
+                    },
+                    error: function() {
+                        swal(data.message, "", "error");
+                    }
+                });
+            });
+
+        });
+    </script>
+}

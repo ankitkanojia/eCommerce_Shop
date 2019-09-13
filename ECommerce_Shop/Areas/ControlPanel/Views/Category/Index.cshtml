@@ -1,0 +1,356 @@
+﻿@model CategoryPageVm
+@{
+    var type = "Add";
+    if (Model.CategoryId != 0)
+    {
+        type = "Edit";
+    }
+    ViewBag.Title = type + " - category";
+    ViewBag.H1Title = "Sample";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>
+            Category
+            @if (type == "Edit")
+            {
+                <a class="btn btn-primary btn-xs pull-right" href="@Url.Action("Index", "Category", new { area = "ControlPanel"  , @id = string.Empty})"><i class="fa fa-plus"></i> Add</a>
+            }
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0)">Category</a>
+            </li>
+            <li class="active">
+                <strong>@type</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-md-12">
+            @Html.Partial("~/Areas/ControlPanel/Views/Shared/_AlertPanel.cshtml")
+        </div>
+
+        <div class="col-md-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <h3 class="m-t-none m-b">@type Category Details</h3>
+
+                    @using (Html.BeginForm(@type, "Category", new { area = "ControlPanel" }, FormMethod.Post, new { id = "frm", enctype = "multipart/form-data" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.CategoryId)
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Category Name</label>
+                                    @*@Html.DropDownListFor(m => m.RootCategoryId, CommonFunctions.GetRootCategories(0), new { @class = "form-control", placeholder = "Size Name" })*@
+                                    @Html.DropDownListFor(m => m.RootCategoryId, CommonFunctions.GetRootCategoriesGroupWise(Model.RootCategoryId), new { @class = "chosen-select", placeholder = "Size Name" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Category Name</label>
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Category Name" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Category Url</label>
+                                    @Html.TextBoxFor(m => m.CustomUrl, new { @class = "form-control", placeholder = "Category Url" })
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Upload Image</label>
+                                        <input name="categoryImage" type='file' onchange="readURL('categoryImage',this)" /><br />
+                                        @if (string.IsNullOrEmpty(Model.ImageName))
+                                        {
+                                            <img id="categoryImage" src="https://via.placeholder.com/80" alt="your image" height="80" width="80" />
+                                        }
+                                        else
+                                        {
+                                            <img id="categoryImage" src="@Url.Content(StaticValues.CategoryImagePath + Model.ImageName)" alt="your image" height="80" width="80" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>*@
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">@type changes</button>
+                                    <button class="btn btn-default" type="reset">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Root Category Name</th>
+                                <th width="8%" data-orderable="false">
+                                    URL
+                                </th>
+                                <th width="10%" data-orderable="false">Activate</th>
+                                <th width="15%" data-orderable="false">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.categoryDetails.Any())
+                            {
+                                foreach (var item in Model.categoryDetails)
+                                {
+                                    <tr id="@item.CategoryId">
+                                        <td>@item.Name</td>
+                                        <td>
+                                            @if (string.IsNullOrEmpty(item.RootCategoryName))
+                                            {
+                                                @:N/A
+                                            }
+                                            else
+                                            {
+                                                @item.RootCategoryName
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (string.IsNullOrEmpty(item.RootCategoryName))
+                                            {
+                                                @:N/A
+                                            }
+                                            else
+                                            {
+                                                @item.CustomUrl
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="switch">
+                                                <div class="onoffswitch">
+                                                    @{
+                                                        var statuschecked = string.Empty;
+                                                        if (item.IsActive)
+                                                        {
+                                                            statuschecked = "checked";
+                                                        }
+                                                    }
+                                                    <input data-id="@item.CategoryId" type="checkbox" @statuschecked class="onoffswitch-checkbox cswitch" id="status_@item.CategoryId">
+                                                    <label class="onoffswitch-label" for="status_@item.CategoryId">
+                                                        <span class="onoffswitch-inner"></span>
+                                                        <span class="onoffswitch-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="@Url.Action("Index", "Category", new {id = item.CategoryId})" class="btn-white btn btn-xs">Edit</a>
+                                                <button class="btn-default btn btn-xs" onclick="Delete(@item.CategoryId)">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Root Category Name</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/Content/Backend/plugins/dataTables/dataTablesStyles")
+    @Styles.Render("~/Content/Backend/plugins/chosen/chosenStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/validate")
+    @Scripts.Render("~/plugins/chosen")
+
+    @*Datatable plugin*@
+    <script type="text/javascript">
+
+        var table;
+        $(document).ready(function() {
+
+            $('.chosen-select').chosen({ include_group_label_in_selected:true , width: "100%" });
+
+            $('.dataTables-example tfoot th').each(function() {
+                var title = $(this).text();
+                if (title.length !== 0) {
+                    $(this).html('<input class="footer-form-control" type="text" placeholder="' + title + '" />');
+                }
+            });
+
+            // DataTable
+            table = $('.dataTables-example').DataTable({
+                "pageLength": 5
+            });
+
+            // Apply the search
+            table.columns().every(function() {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change',
+                    function() {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+            });
+
+            $('.dataTables-example').on( 'draw.dt', function () {
+                $('.cswitch').click(function(event) {
+                    event.preventDefault();
+                    var currentStatus = this.checked;
+                    var id = $(this).attr("data-id");
+                    $.ajax({
+                        url: "@Url.Action("ActivateDeActivate", "Category", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { status: currentStatus, id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status) {
+                                swal(data.message, "", "success");
+                                if (currentStatus) {
+                                    $("#RootCategoryId")
+                                        .append('<option value="' + data.id + '">' + data.name + '</option>');
+                                } else {
+                                    $("#RootCategoryId option[value='" + id + "']").remove();
+                                }
+                                $("#status_" + id).prop("checked", currentStatus);
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+            });
+        });
+
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#frm").validate({
+                rules: {
+                    Name: {
+                        required: true
+                    }
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+
+        var Delete = function(id) {
+            swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Category", new {area = "ControlPanel"})",
+                        type: "POST",
+                        data: { id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status) {
+                                table.row("#" + id).remove().draw();
+                                $("#RootCategoryId option[value='" + id + "']").remove();
+                                swal(data.message, "", "success");
+                            } else {
+                                swal(data.message, "", "error");
+                            }
+                        },
+                        error: function() {
+                            swal(data.message, "", "error");
+                        }
+                    });
+                });
+        }
+
+    </script>
+
+    <script>
+        $(document).ready(function() {
+
+            $('.cswitch').click(function(event) {
+                event.preventDefault();
+                var currentStatus = this.checked;
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    url: "@Url.Action("ActivateDeActivate", "Category", new {area = "ControlPanel"})",
+                    type: "POST",
+                    data: { status: currentStatus, id: id },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.status) {
+                            swal(data.message, "", "success");
+                            if (currentStatus) {
+                                $("#RootCategoryId")
+                                    .append('<option value="' + data.id + '">' + data.name + '</option>');
+                            } else {
+                                $("#RootCategoryId option[value='" + id + "']").remove();
+                            }
+                            $("#status_" + id).prop("checked", currentStatus);
+                        } else {
+                            swal(data.message, "", "error");
+                        }
+                    },
+                    error: function() {
+                        swal(data.message, "", "error");
+                    }
+                });
+            });
+
+        });
+    </script>
+}

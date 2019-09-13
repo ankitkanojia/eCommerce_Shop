@@ -1,0 +1,791 @@
+﻿@model ProductVm
+@{
+    ViewBag.Title = "Add - product";
+    ViewBag.H1Title = "Product";
+    ViewBag.MtDescription = "";
+    ViewBag.MtKeywords = "";
+    var lastGroup = string.Empty;
+}
+
+<style>
+    .form-control.error {
+        border: 1px solid #cc5965 !important;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Product(s)</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Product")">Product</a>
+            </li>
+            <li class="active">
+                <strong>Add</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    @using (Html.BeginForm("Add", "Product", new { area = "ControlPanel" }, FormMethod.Post, new { id = "frm" }))
+                    {
+
+                        // @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ProductImages)
+                        <section id="ProductInfo">
+                            <h2><strong>Product Info</strong></h2>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Product Name</label>
+                                        @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control requiredField" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        @Html.DropDownList("CategoryId", CommonFunctions.GetCategoriesGroupWise(0, false, true), new { @class = "chosen-select", placeholder = "Size Name" })
+                                    </div>
+                                </div>
+
+                                @*<div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Brand</label>
+                                            @Html.DropDownList("BrandId", CommonFunctions.GetBrand(0), new { @class = "chosen-select", placeholder = "Size Name" })
+                                        </div>
+                                    </div>*@
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>SKU</label>
+                                        @Html.TextBoxFor(m => m.SKU, new { @class = "form-control requiredField" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>MRP</label>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.MRP, new { @class = "form-control requiredField" })
+                                            <span class="input-group-addon">
+                                                <strong>Rs</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Price</label>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Price, new { @class = "form-control requiredField" })
+                                            <span class="input-group-addon">
+                                                <strong>Rs</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>TAX</label>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.TAX, new { @class = "form-control requiredField" })
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-percent"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Tag</label>
+                                        @Html.TextBoxFor(m => m.Tag, new { @class = "form-control tagsinput" })
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Offers / Discount</label>
+                                        @Html.DropDownList("OfferId", CommonFunctions.GetOfferList(0) , string.Empty, new { @class = "chosen-select", placeholder = "Offer(s)" })
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <br />
+                        <br />
+                        <br />
+
+                        <section id="ProductFeatures">
+                            <h2><strong>Product Feature(s)</strong></h2>
+                            <hr />
+
+                            <table class="table table-stripped table-bordered" id="tblProductFeatureClone">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" controlType="FeatureType">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" controlType="FeatureValue">
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <button onclick="DeleteFeatureRow(this)" class="btn btn-white"><i class="fa fa-trash"></i> </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-stripped table-bordered" id="tblProductFeature">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            Feature Type
+                                        </th>
+                                        <th class="text-center">
+                                            Value
+                                        </th>
+                                        <th style="width: 4%">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <input id="ProductFeatureDetails[0].FeatureType" style="width: 100%" name="ProductFeatureDetails[0].FeatureType" type="text" class="form-control requiredField" controlType="FeatureType">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input style="width: 100%" id="ProductFeatureDetails[0].FeatureValue" name="ProductFeatureDetails[0].FeatureValue" type="text" class="form-control requiredField" controlType="FeatureValue">
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <button onclick="DeleteFeatureRow(this)" class="btn btn-white"><i class="fa fa-trash"></i> </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="button" onclick="AddNewFeatureLine()"><i class="fa fa-plus"></i> Add New Feature</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+
+                        <br />
+                        <br />
+                        <br />
+
+                        <section id="ProductSizeStock">
+                            <h2><strong>Product Size-Color</strong></h2>
+                            <hr />
+
+                            <table class="table table-stripped table-bordered" id="tblProductSizeQtyClone">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" controlType="SizeId">
+                                                @foreach (var size in CommonFunctions.GetSize(0))
+                                                {
+                                                    <option value="@size.Value">@size.Text</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control" controlType="ColorId">
+                                                @foreach (var color in CommonFunctions.GetColor())
+                                                {
+                                                    if (color.ColorId == 0)
+                                                    {
+                                                        <option value="">@color.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option style='-webkit-filter: invert(100%);background-color: @color.Hex' value="@color.ColorId">@color.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        @*<td>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" placeholder="" controlType="StockQty">
+                                                </div>
+                                            </td>*@
+                                        <td class="text-center">
+                                            <button onclick="DeleteRow(this)" class="btn btn-white"><i class="fa fa-trash"></i> </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-stripped table-bordered" id="tblProductSizeQty">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 18%">
+                                            Size
+                                        </th>
+                                        <th class="text-center" style="width: 18%">
+                                            Color
+                                        </th>
+                                        @*<th class="text-center" style="width: 12%">
+                                                Quantity
+                                            </th>*@
+                                        <th style="width: 4%">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Html.DropDownList("ProductDetails[0].SizeId", CommonFunctions.GetSize(0), new { @class = "form-control requiredField", placeholder = "Size Name", id = "ProductDetails[0].SizeId", controlType = "SizeId" })
+                                        </td>
+                                        <td>
+                                            <select id="ProductDetails[0].ColorId" name="ProductDetails[0].ColorId" class="form-control requiredField" controlType="ColorId">
+                                                @foreach (var color in CommonFunctions.GetColor())
+                                                {
+                                                    if (color.ColorId == 0)
+                                                    {
+                                                        <option value="">@color.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option style='-webkit-filter: invert(100%); background-color: @color.Hex' value="@color.ColorId">@color.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        @*<td>
+                                                <div class="input-group">
+                                                    <input id="ProductDetails[0].StockQty" name="ProductDetails[0].StockQty" type="number" class="form-control requiredField" controlType="StockQty">
+                                                </div>
+                                            </td>*@
+                                        <td class="text-center">
+                                            <button onclick="DeleteRow(this)" class="btn btn-white"><i class="fa fa-trash"></i> </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="button" onclick="AddNewLine()"><i class="fa fa-plus"></i> Add New Size-Color</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+
+                        <br />
+                        <br />
+                        <br />
+
+                        <section id="ProductDescription">
+                            <h2><strong>Product Description(s)</strong></h2>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Short description</label>
+                                        <textarea name="ShortDescription" class="form-control requiredField" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea name="FullDescription" id="editor1" rows="10" cols="80" required></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+                        <br />
+                        <br />
+                        <br />
+
+                        <section id="ProductImages">
+                            <h2><strong>Product Image(s)</strong></h2>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="table-responsive">
+                                        <table id="dynamicImageTable" class="table table-striped table-bordered table-hover dataTables-example">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" width="10%">
+                                                        Preview
+                                                    </th>
+                                                    <th width="8%" class="text-center">
+                                                        Cover
+                                                    </th>
+                                                    <th data-orderable="false" class="text-center" width="8%">
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Add a new image to this product</label><br />
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <span class="btn btn-primary btn-file">
+                                                <span><i class="fa fa-plus"></i> Add File (s)</span>
+                                                <input accept="image/*" type="file" name="..." multiple="" onchange="readMultipleImage(this)" />
+                                            </span><br />
+                                            <small style="color: red">* size 600 x 800 is preferred size</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button onclick="submitForm()" type="button" class="ladda-button btn btn-primary" data-style="expand-right">Save changes</button>
+                                        @*<button onclick="submitForm()" class="btn btn-primary" type="button">Save changes</button>*@
+                                        <button class="btn btn-default" onclick="ResetForm()" type="button">Reset Form</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/Content/Backend/plugins/dataTables/dataTablesStyles")
+    @Styles.Render("~/Content/Backend/plugins/chosen/chosenStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/tagInputsStyles")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/ckeditor")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/validate")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/ladda")
+
+    <script>
+        function ResetForm() {
+            $('#frm').trigger("reset");
+            $(".tagsinput").tagsinput('removeAll');
+            table.clear().draw();
+            CKEDITOR.instances.editor1.setData('');
+        }
+    </script>
+
+    @*Ckeditor Plugin*@
+    <script>
+
+        CKEDITOR.basePath = '/Scripts/Backend/plugins/ckeditor/';
+
+    </script>
+
+    <script>
+        CKEDITOR.replace('editor1');
+
+        CKEDITOR.instances.editor1.on('change',
+            function () {
+                CKEDITOR.instances.editor1.updateElement();
+                $("#frm").validate().element("#editor1");
+            });
+    </script>
+
+    @*Datatable plugin*@
+    <script type="text/javascript">
+
+
+        var table;
+        var btn;
+        $(document).ready(function () {
+
+            var cdate = new Date();
+            btn = Ladda.create(document.querySelector('.ladda-button'));
+
+            $('.date').datepicker({
+                defaultDate: cdate,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                startDate: cdate
+            });
+
+            $("#tblProductSizeQtyClone").hide();
+            $("#tblProductFeatureClone").hide();
+
+            table = $('.dataTables-example').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false
+            });
+
+            $('.chosen-select').chosen({ width: "100%" });
+        });
+
+    </script>
+
+    <script>
+
+        var GetRandomNumber = function() {
+            var date = new Date();
+            var components = [
+                date.getYear(),
+                date.getMonth(),
+                date.getDate(),
+                date.getHours(),
+                date.getMinutes(),
+                date.getSeconds(),
+                date.getMilliseconds()
+            ];
+            return components.join("");
+        }
+
+        var imageArray = [];
+        var randomNumber = Math.floor((Math.random() * 100000000000) + 1);
+
+        function readMultipleImage(input) {
+            if (input.files) {
+                var filesAmount = input.files.length;
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+                    reader.fileExtension = input.files[i].name.replace(/^.*\./, '');
+                    reader.onload = function(e) {
+
+                        randomNumber = parseInt(e.timeStamp) + parseInt(e.total) + parseInt(e.loaded);
+                        var currentCount = table.rows().count() + 1;
+
+                        var iscover = false;
+                        var checked = "";
+                        if (currentCount === 1) {
+                            checked = "checked";
+                            iscover = true;
+                        }
+
+                        imageArray.push({
+                            key: randomNumber,
+                            iscover: iscover,
+                            currentId: randomNumber,
+                            extension: e.target.fileExtension,
+                            imageSrc: e.target.result
+                        });
+
+                        var jRow = "<tr><td class='text-center align-middle'><img id='categoryImage' src='" +
+                            e.target.result +
+                            "' alt='your image' width='48' height='48'></td><td class='text-center align-middle' ><input onchange = 'changeSelectedIndex(\"" +
+                            randomNumber +
+                            "\")' type='radio' data-number= '" +
+                            randomNumber +
+                            "' class='form-control coverImage' name='coverImage' " +
+                            checked +
+                            "></td><td class='text-center align-middle'><button type='button' onclick='removeTableRow(this ,\"" +
+                            randomNumber +
+                            "\")' class='btn btn-white'><i class='fa fa-trash'></i> Delete</button></td></tr>";
+
+                        table.row.add($(jRow)).draw();
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        }
+
+        var changeSelectedIndex = function(recordNumber) {
+            $.each(imageArray,
+                function() {
+                    if (parseInt(this.key) === parseInt(recordNumber)) {
+                        this.iscover = true;
+                    } else {
+                        this.iscover = false;
+                    }
+                });
+        }
+
+        var removeTableRow = function(obj, recordNumber) {
+
+            if ($(obj).closest("tr").find("input.coverImage").prop("checked") && table.rows().count() > 1) {
+                table.row($(obj).parents('tr')).remove().draw();
+                $('.dataTables-example tbody').find("tr:first").find("input.coverImage")
+                    .prop("checked", "checked");
+            } else {
+                table.row($(obj).parents('tr')).remove().draw();
+            }
+
+            var dummyArray = [];
+            $.each(imageArray,
+                function() {
+                    console.log(parseInt(this.key) + " -- " + parseInt(recordNumber) + "---" + this.iscover);
+                    if (parseInt(this.key) === parseInt(recordNumber)) {
+                        if (this.iscover === true && dummyArray.length > 0) {
+                            dummyArray[0].iscover = true;
+                        }
+                    } else {
+                        this.iscover = false;
+                        dummyArray.push(this);
+                    }
+                });
+
+            imageArray = dummyArray;
+        }
+
+        var reinitializeSizeStockTable = function() {
+            var i = 0;
+            $("#tblProductSizeQty").find("tbody tr").each(function() {
+
+                $(this).find(".form-control").each(function() {
+                    var controlType = $(this).attr("controlType");
+                    $(this).addClass("requiredField");
+                    $(this).attr("id", "ProductDetails[" + i + "]." + controlType);
+                    $(this).attr("name", "ProductDetails[" + i + "]." + controlType);
+                });
+
+                i = i + 1;
+            });
+        }
+
+        var reinitializeFeatureTable = function() {
+            var f = 0;
+            $("#tblProductFeature").find("tbody tr").each(function() {
+                $(this).find(".form-control").each(function() {
+                    var controlType = $(this).attr("controlType");
+                    $(this).addClass("requiredField");
+                    $(this).attr("id", "ProductFeatureDetails[" + f + "]." + controlType);
+                    $(this).attr("name", "ProductFeatureDetails[" + f + "]." + controlType);
+                });
+                f = f + 1;
+            });
+        }
+
+        var submitForm = function() {
+            if ($("#frm").valid()) {
+                btn.start();
+                $("#ProductImages").val(JSON.stringify(imageArray));
+                var formElements = $('#frm')[0];
+                var formdata = new FormData(formElements);
+
+                $.ajax({
+                    url: '/ControlPanel/Product/Add',
+                    type: 'POST',
+                    data: formdata,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        btn.stop();
+                        if (data.status) {
+                            swal({
+                                    title: "",
+                                    text: data.message,
+                                    type: "success"
+                                },
+                                function() {
+                                    location.href = '@Url.Action("Index", "Product", new {area = "ControlPanel"})';
+                                });
+                        } else {
+                            swal(data.message, "", "error");
+                        }
+                    },
+                    error: function(xhr, error, status) {
+                        swal(data.message, "", "error");
+                    }
+                });
+            } else {
+                swal("Please fill all required field(s)", "", "error");
+            }
+        }
+
+    </script>
+
+    <script>
+        var AddNewLine = function () {
+            $("#tblProductSizeQty").find("#nodatafound").remove();
+            var row = $.trim($("#tblProductSizeQtyClone").find("tbody").html());
+            $("#tblProductSizeQty").find("tbody").append(row);
+            reinitializeSizeStockTable();
+        }
+
+        var DeleteRow = function (obj) {
+            $(obj).closest("tr").remove();
+            var existingCount = $("#tblProductSizeQty").find("tbody tr").length;
+            if (existingCount == 0) {
+                $("#tblProductSizeQty")
+                    .append("<tr id='nodatafound' class='text-center'><td colspan='3'>No Data Found..</td></tr>");
+            }
+            reinitializeSizeStockTable();
+        }
+
+        var AddNewFeatureLine = function () {
+            $("#tblProductFeature").find("#nodatafound").remove();
+            var row = $.trim($("#tblProductFeatureClone").find("tbody").html());
+            $("#tblProductFeature").find("tbody").append(row);
+            reinitializeFeatureTable();
+        }
+
+        var DeleteFeatureRow = function (obj) {
+            $(obj).closest("tr").remove();
+            var existingCount = $("#tblProductFeature").find("tbody tr").length;
+            if (existingCount === 0) {
+                $("#tblProductFeature")
+                    .append("<tr id='nodatafound' class='text-center'><td colspan='3'>No Data Found..</td></tr>");
+            }
+            reinitializeFeatureTable();
+        }
+
+    </script>
+
+    @*Jquery Validation*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#frm").validate({
+                ignore: [],
+                rules: {
+                    FullDescription: {
+                        required: true
+                    }
+                }
+            });
+
+            $.validator.addClassRules("requiredField",
+                {
+                    required: true
+                });
+
+            $('select').on('change',
+                function () {
+                    var id = $(this).attr("id");
+                    $("#frm").validate().element("#" + id);
+                });
+
+        });
+    </script>
+
+    @*Taginput plugin*@
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+        });
+
+        var toggleTab = function (id) {
+            $("#ProductTab").find("li").removeClass("active");
+            $("#ProductTab").find("#li_" + id).addClass("active");
+        }
+    </script>
+
+    <script>
+        var groupNames = [];
+
+        $("#CategoryId").change(function () {
+            console.log($(this).val());
+            $.ajax({
+                url: '/ControlPanel/Product/GetSizeFilterByCategory',
+                type: 'POST',
+                data: { id: $(this).val() },
+                datatype: 'json',
+                success: function (data) {
+                    if (data.status) {
+                        var optionsList = "";
+                        $.each(data.sizeList,
+                            function () {
+                                optionsList =
+                                    optionsList +
+                                    '<option ' +
+                                    this.Selected +
+                                    ' value="' +
+                                    this.Value +
+                                    '">' +
+                                    this.Text +
+                                    '</option>';
+                            });
+
+                        $("select[controltype='SizeId']").each(function () {
+                            $(this).html('');
+                            $(this).append(optionsList);
+                        });
+
+                        groupNames = [];
+                        var optionsFilterList = "";
+                        $.each(data.filterList,
+                            function () {
+                                if (this.Group != null) {
+                                    if ($.inArray(this.Group.Name, groupNames) === -1) {
+                                        groupNames.push(this.Group.Name);
+                                    }
+                                }
+                            });
+
+                        $("#FilterDataId").html('');
+                        $("#FilterDataId").append('<option value="">Select Filter By</option>');
+                        $.each(groupNames,
+                            function () {
+                                optionsFilterList = "";
+                                $.each(data.filterList.filter(m => m.Group != null && m.Group.Name == this),
+                                    function () {
+                                        optionsFilterList =
+                                            optionsFilterList +
+                                            '<option ' +
+                                            this.Selected +
+                                            ' value="' +
+                                            this.Value +
+                                            '">' +
+                                            this.Text +
+                                            '</option>';
+                                    });
+                                $("#FilterDataId").append('<optgroup label="' + this + '">' + optionsFilterList + '</optgroup>');
+                            });
+                        $('#FilterDataId').trigger("chosen:updated");
+
+                    } else {
+                        swal(data.message, "", "error");
+                    }
+                },
+                error: function (xhr, error, status) {
+                    swal(data.message, "", "error");
+                }
+            });
+        });
+    </script>
+}
