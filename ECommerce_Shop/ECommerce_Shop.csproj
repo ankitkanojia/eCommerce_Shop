@@ -442,6 +442,11 @@
     <Content Include="Content\Frontend\style.css" />
     <Content Include="Content\Frontend\swiper.css" />
     <Content Include="Database File\ECommerce_Shop.sql" />
+    <Content Include="Demo Image\Cart.png" />
+    <Content Include="Demo Image\Category.png" />
+    <Content Include="Demo Image\cgeckout.png" />
+    <Content Include="Demo Image\Home.png" />
+    <Content Include="Demo Image\Product Details.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
